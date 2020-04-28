@@ -10,7 +10,7 @@ import android.view.WindowManager
  * @author vikramezhil
  */
 
-class ScreenUtils {
+class DvuScreenUtils {
     companion object {
         /**
          * Gets the screen width

@@ -10,7 +10,7 @@ import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
 import androidx.annotation.AttrRes
 import github.com.vikramezhil.dvu.R
-import github.com.vikramezhil.dvu.utils.ScreenUtils
+import github.com.vikramezhil.dvu.utils.DvuScreenUtils
 import kotlinx.android.synthetic.main.layout_dvuwv.view.*
 
 /**
@@ -53,11 +53,11 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         override var unselectedItemTxtAlpha: Float = 1f
 
-        override var height: Int = ScreenUtils.dpToPx(context, 300)
+        override var height: Int = DvuScreenUtils.dpToPx(context, 300)
 
-        override var vPadding: Int = ScreenUtils.dpToPx(context, 5)
+        override var vPadding: Int = DvuScreenUtils.dpToPx(context, 5)
 
-        override var hPadding: Int = ScreenUtils.dpToPx(context, 75)
+        override var hPadding: Int = DvuScreenUtils.dpToPx(context, 75)
 
         override var itemTextStyle: Int = 0
 
