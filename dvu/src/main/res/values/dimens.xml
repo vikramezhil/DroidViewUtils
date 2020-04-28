@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  Wheel View  -->
+    <dimen name="dvu_wv_divider_height">1dp</dimen>
+    <dimen name="dvu_wv_item_margin">20dp</dimen>
+    <dimen name="dvu_wv_item_height">100dp</dimen>
+</resources>

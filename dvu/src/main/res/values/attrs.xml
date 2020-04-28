@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DvuWheelView">
+        <attr name="dvuWvWheelItems" format="reference"/>
+        <attr name="dvuWvItemTxtStyle" format="reference"/>
+
+        <attr name="dvuWvBgColor" format="color"/>
+        <attr name="dvuWvSelectedItemBgColor" format="color"/>
+        <attr name="dvuWvSelectedItemTxtColor" format="color"/>
+        <attr name="dvuWvUnselectedItemBgColor" format="color"/>
+        <attr name="dvuWvUnselectedItemTxtColor" format="color"/>
+        <attr name="dvuWvDividerColor" format="color"/>
+
+        <attr name="dvuWvShowDivider" format="boolean"/>
+        <attr name="dvuWvItemTxtBold" format="boolean"/>
+        <attr name="dvuWvItemTxtItalic" format="boolean"/>
+        <attr name="dvuWvOrientationVertical" format="boolean"/>
+        <attr name="dvuWvInfiniteScrolling" format="boolean"/>
+
+        <attr name="dvuWvItemTxtSize" format="float"/>
+        <attr name="dvuWvUnselectedItemTxtAlpha" format="float"/>
+
+        <attr name="dvuWvDefaultSelectedItemPos" format="integer"/>
+    </declare-styleable>
+</resources>
