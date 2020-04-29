@@ -1,12 +1,10 @@
 package github.com.vikramezhil.droidviewutils
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import github.com.vikramezhil.dvu.views.wheel.OnDvuWvListener
 import kotlinx.android.synthetic.main.activity_wheel_view.*
-import java.util.*
 
 /**
  * Wheel picker activity
@@ -19,7 +17,6 @@ class WheelPickerActivity: AppCompatActivity() {
 
         setContentView(R.layout.activity_wheel_view)
 
-        wv_horizontal.setWheelItems(resources.getStringArray(R.array.dvu_wheel_view_example_items).toCollection(ArrayList()), 3)
         wv_horizontal.setOnDvuWvWheelListener(object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
                 val liveValue = "Horizontal wheel - $value"
@@ -38,7 +35,7 @@ class WheelPickerActivity: AppCompatActivity() {
             }
 
             override fun onScrolling() {
-                Log.d(application.packageName, "wv_vertical is scrolling")
+                Log.d(application.packageName, "wv_vertical_1 is scrolling")
             }
         })
 
@@ -49,7 +46,7 @@ class WheelPickerActivity: AppCompatActivity() {
             }
 
             override fun onScrolling() {
-                Log.d(application.packageName, "wv_vertical is scrolling")
+                Log.d(application.packageName, "wv_vertical_2 is scrolling")
             }
         })
 
@@ -60,7 +57,7 @@ class WheelPickerActivity: AppCompatActivity() {
             }
 
             override fun onScrolling() {
-                Log.d(application.packageName, "wv_vertical is scrolling")
+                Log.d(application.packageName, "wv_vertical_3 is scrolling")
             }
         })
     }

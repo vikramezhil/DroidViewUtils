@@ -2,7 +2,6 @@ package github.com.vikramezhil.dvu.views.wheel
 
 import android.content.Context
 import android.graphics.Color
-import android.os.Handler
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -198,50 +197,47 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         dvu_wheel.adapter = adapter
 
         // Refreshing the wheel
-        refreshWheel(dvuWheelProps.selectedItemPos, applyDelay = true)
+        refreshWheel(dvuWheelProps.selectedItemPos)
     }
 
     /**
      * Refreshing the wheel
      * @param position Int The scroll position
-     * @param applyDelay Boolean The apply delay status
      */
-    private fun refreshWheel(position: Int, applyDelay: Boolean) {
-        Handler().postDelayed({
-            val prevPosition = dvuWheelProps.selectedItemPos
-            if (dvuWheelProps.itemsList.size > 0) {
-                if (position < 0 || position >= dvuWheelProps.itemsList.size) {
-                    dvuWheelProps.selectedItemPos = 0
-                } else {
-                    dvuWheelProps.selectedItemPos = position
-                }
-
-                // Finding initial scroll to position to prevent long animation when there are
-                // lot of items in the list during smooth scroll
-                val scrollToPosition = when {
-                    dvuWheelProps.selectedItemPos > prevPosition -> {
-                        // Scroll down position
-                        dvuWheelProps.selectedItemPos - 1
-                    }
-                    dvuWheelProps.selectedItemPos < prevPosition -> {
-                        // Scroll up position
-                        dvuWheelProps.selectedItemPos + 1
-                    }
-                    else -> {
-                        dvuWheelProps.selectedItemPos
-                    }
-                }
-
-                if (scrollToPosition >= 0 &&  scrollToPosition < dvuWheelProps.itemsList.size) {
-                    dvu_wheel.scrollToPosition(scrollToPosition)
-                }
-
-                dvu_wheel.smoothScrollToPosition(dvuWheelProps.selectedItemPos)
-
-                dvuWheelProps.enableItemHighlight = true
-                adapter?.update(dvuWheelProps)
+    private fun refreshWheel(position: Int) {
+        val prevPosition = dvuWheelProps.selectedItemPos
+        if (dvuWheelProps.itemsList.size > 0) {
+            if (position < 0 || position >= dvuWheelProps.itemsList.size) {
+                dvuWheelProps.selectedItemPos = 0
+            } else {
+                dvuWheelProps.selectedItemPos = position
             }
-        }, if (applyDelay) dvuWheelProps.initialScrollDelay else 0)
+
+            // Finding initial scroll to position to prevent long animation when there are
+            // lot of items in the list during smooth scroll
+            val scrollToPosition = when {
+                dvuWheelProps.selectedItemPos > prevPosition -> {
+                    // Scroll down position
+                    dvuWheelProps.selectedItemPos - 1
+                }
+                dvuWheelProps.selectedItemPos < prevPosition -> {
+                    // Scroll up position
+                    dvuWheelProps.selectedItemPos + 1
+                }
+                else -> {
+                    dvuWheelProps.selectedItemPos
+                }
+            }
+
+            if (scrollToPosition >= 0 &&  scrollToPosition < dvuWheelProps.itemsList.size) {
+                dvu_wheel.scrollToPosition(scrollToPosition)
+            }
+
+            dvu_wheel.smoothScrollToPosition(dvuWheelProps.selectedItemPos)
+
+            dvuWheelProps.enableItemHighlight = true
+            adapter?.update(dvuWheelProps)
+        }
     }
 
     /**
@@ -258,7 +254,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      */
     fun setWheelItems(itemsList: ArrayList<String>) {
         dvuWheelProps.itemsList = itemsList
-        refreshWheel(0, applyDelay = true)
+        refreshWheel(0)
     }
 
     /**
@@ -268,7 +264,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      */
     fun setWheelItems(itemsList: ArrayList<String>, scrollToPos: Int) {
         dvuWheelProps.itemsList = itemsList
-        refreshWheel(scrollToPos, applyDelay = true)
+        refreshWheel(scrollToPos)
     }
 
     /**
@@ -276,7 +272,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param scrollToPos Int The scroll to position
      */
     fun scrollToPosition(scrollToPos: Int) {
-        refreshWheel(scrollToPos, applyDelay = false)
+        refreshWheel(scrollToPos)
     }
 
     /**
@@ -284,7 +280,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param itemName String The scroll to item name
      */
     fun scrollToItem(itemName: String) {
-        refreshWheel(dvuWheelProps.itemsList.indexOf(itemName), applyDelay = false)
+        refreshWheel(dvuWheelProps.itemsList.indexOf(itemName))
     }
 
     /**

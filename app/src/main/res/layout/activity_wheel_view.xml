@@ -27,7 +27,8 @@
         app:dvuWvOrientationVertical="false"
         app:dvuWvItemTxtSize="22"
         app:dvuWvDefaultSelectedItemPos="3"
-        app:dvuWvUnselectedItemTxtAlpha="0.8"/>
+        app:dvuWvUnselectedItemTxtAlpha="0.8"
+        app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
 
     <TextView
         android:id="@+id/tv_vertical_val"
@@ -54,7 +55,7 @@
             app:dvuWvItemTxtItalic="true"
             app:dvuWvOrientationVertical="true"
             app:dvuWvItemTxtSize="22"
-            app:dvuWvDefaultSelectedItemPos="3"
+            app:dvuWvDefaultSelectedItemPos="0"
             app:dvuWvUnselectedItemTxtAlpha="0.8"
             app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
 
@@ -71,7 +72,7 @@
             app:dvuWvItemTxtItalic="true"
             app:dvuWvOrientationVertical="true"
             app:dvuWvItemTxtSize="22"
-            app:dvuWvDefaultSelectedItemPos="3"
+            app:dvuWvDefaultSelectedItemPos="1"
             app:dvuWvUnselectedItemTxtAlpha="0.8"
             app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
 
@@ -88,7 +89,7 @@
             app:dvuWvItemTxtItalic="true"
             app:dvuWvOrientationVertical="true"
             app:dvuWvItemTxtSize="22"
-            app:dvuWvDefaultSelectedItemPos="3"
+            app:dvuWvDefaultSelectedItemPos="2"
             app:dvuWvUnselectedItemTxtAlpha="0.8"
             app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
     </LinearLayout>
