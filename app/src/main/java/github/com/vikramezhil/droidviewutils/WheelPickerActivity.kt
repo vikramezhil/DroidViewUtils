@@ -1,12 +1,10 @@
 package github.com.vikramezhil.droidviewutils
 
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import github.com.vikramezhil.dvu.views.wheel.OnDvuWvListener
 import kotlinx.android.synthetic.main.activity_wheel_view.*
-import java.util.*
 
 /**
  * Wheel picker activity
@@ -29,17 +27,37 @@ class WheelPickerActivity: AppCompatActivity() {
                 Log.d(application.packageName, "wv_horizontal is scrolling")
             }
         })
-        wv_horizontal.setWheelItems(resources.getStringArray(R.array.dvu_wheel_view_example_items).toCollection(ArrayList()))
-        wv_horizontal.scrollToPosition(3)
 
-        wv_vertical.setOnDvuWvWheelListener(object: OnDvuWvListener {
+        wv_vertical_1.setOnDvuWvWheelListener(object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
-                val liveValue = "Vertical wheel - $value"
+                val liveValue = "Vertical wheel 1 - $value"
                 tv_vertical_val.text = liveValue
             }
 
             override fun onScrolling() {
-                Log.d(application.packageName, "wv_vertical is scrolling")
+                Log.d(application.packageName, "wv_vertical_1 is scrolling")
+            }
+        })
+
+        wv_vertical_2.setOnDvuWvWheelListener(object: OnDvuWvListener {
+            override fun onItemSelected(position: Int, value: String) {
+                val liveValue = "Vertical wheel 2 - $value"
+                tv_vertical_val.text = liveValue
+            }
+
+            override fun onScrolling() {
+                Log.d(application.packageName, "wv_vertical_2 is scrolling")
+            }
+        })
+
+        wv_vertical_3.setOnDvuWvWheelListener(object: OnDvuWvListener {
+            override fun onItemSelected(position: Int, value: String) {
+                val liveValue = "Vertical wheel 3 - $value"
+                tv_vertical_val.text = liveValue
+            }
+
+            override fun onScrolling() {
+                Log.d(application.packageName, "wv_vertical_3 is scrolling")
             }
         })
     }
