@@ -36,20 +36,61 @@
         android:gravity="center"
         tool:text="Live value"/>
 
-    <github.com.vikramezhil.dvu.views.wheel.DvuWheelView
-        android:id="@+id/wv_vertical"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:dvuWvBgColor="@color/colorPrimary"
-        app:dvuWvDividerColor="@android:color/white"
-        app:dvuWvSelectedItemBgColor="@color/colorAccent"
-        app:dvuWvUnselectedItemTxtColor="@color/colorAccent"
-        app:dvuWvItemTxtBold="true"
-        app:dvuWvItemTxtItalic="true"
-        app:dvuWvOrientationVertical="true"
-        app:dvuWvItemTxtSize="22"
-        app:dvuWvDefaultSelectedItemPos="2"
-        app:dvuWvUnselectedItemTxtAlpha="0.8"
-        app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <github.com.vikramezhil.dvu.views.wheel.DvuWheelView
+            android:id="@+id/wv_vertical_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dvuWvBgColor="@color/colorPrimary"
+            app:dvuWvDividerColor="@android:color/white"
+            app:dvuWvSelectedItemBgColor="@color/colorAccent"
+            app:dvuWvUnselectedItemTxtColor="@color/colorAccent"
+            app:dvuWvItemTxtBold="true"
+            app:dvuWvItemTxtItalic="true"
+            app:dvuWvOrientationVertical="true"
+            app:dvuWvItemTxtSize="22"
+            app:dvuWvDefaultSelectedItemPos="3"
+            app:dvuWvUnselectedItemTxtAlpha="0.8"
+            app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
+
+        <github.com.vikramezhil.dvu.views.wheel.DvuWheelView
+            android:id="@+id/wv_vertical_2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dvuWvBgColor="@color/colorPrimary"
+            app:dvuWvDividerColor="@android:color/white"
+            app:dvuWvSelectedItemBgColor="@color/colorAccent"
+            app:dvuWvUnselectedItemTxtColor="@color/colorAccent"
+            app:dvuWvItemTxtBold="true"
+            app:dvuWvItemTxtItalic="true"
+            app:dvuWvOrientationVertical="true"
+            app:dvuWvItemTxtSize="22"
+            app:dvuWvDefaultSelectedItemPos="3"
+            app:dvuWvUnselectedItemTxtAlpha="0.8"
+            app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
+
+        <github.com.vikramezhil.dvu.views.wheel.DvuWheelView
+            android:id="@+id/wv_vertical_3"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            app:dvuWvBgColor="@color/colorPrimary"
+            app:dvuWvDividerColor="@android:color/white"
+            app:dvuWvSelectedItemBgColor="@color/colorAccent"
+            app:dvuWvUnselectedItemTxtColor="@color/colorAccent"
+            app:dvuWvItemTxtBold="true"
+            app:dvuWvItemTxtItalic="true"
+            app:dvuWvOrientationVertical="true"
+            app:dvuWvItemTxtSize="22"
+            app:dvuWvDefaultSelectedItemPos="3"
+            app:dvuWvUnselectedItemTxtAlpha="0.8"
+            app:dvuWvWheelItems="@array/dvu_wheel_view_example_items"/>
+    </LinearLayout>
+
 </LinearLayout>
