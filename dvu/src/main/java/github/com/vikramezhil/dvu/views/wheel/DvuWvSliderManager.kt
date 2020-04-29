@@ -15,7 +15,7 @@ import kotlin.math.sqrt
  * @author vikramezhil
  */
 
-class DvuWvSliderManager(context: Context, orientationVal: Int, private val listener: OnDvuWvListener) : LinearLayoutManager(context) {
+class DvuWvSliderManager(context: Context, orientationVal: Int, private val scaleDownEnabled: Boolean, private val listener: OnDvuWvListener) : LinearLayoutManager(context) {
 
     private lateinit var view: RecyclerView
 
@@ -108,41 +108,43 @@ class DvuWvSliderManager(context: Context, orientationVal: Int, private val list
      * Scales down the view
      */
     private fun scaleDownView(orientation: Int) {
-        val mid = if (orientation == VERTICAL) {
-            height / 2.0f
-        } else {
-            width / 2.0f
-        }
+        if (scaleDownEnabled) {
+            val mid = if (orientation == VERTICAL) {
+                height / 2.0f
+            } else {
+                width / 2.0f
+            }
 
-        for (cat in 0 until childCount) {
-            // Calculating the distance of the child from the center
-            val child = getChildAt(cat)
-            if (child != null) {
-                val childMid = if (orientation == VERTICAL) {
-                    (getDecoratedTop(child) + getDecoratedBottom(child)) / 2.0f
-                } else {
-                    (getDecoratedLeft(child) + getDecoratedRight(child)) / 2.0f
-                }
-
-                val distanceFromCenter = abs(mid - childMid)
-                // The scaling formula
-                val scale = if (orientation == VERTICAL) {
-                    1 - sqrt((distanceFromCenter/height).toDouble()).toFloat() * 0.66f
-                } else {
-                    1 - sqrt((distanceFromCenter/width).toDouble()).toFloat() * 0.66f
-                }
-
-                if (child is LinearLayout) {
-                    (child).forEach {
-                        if (it is TextView) {
-                            // Set scale to text view
-                            it.scaleX = scale
-                            it.scaleY = scale
-                        }
+            for (cat in 0 until childCount) {
+                // Calculating the distance of the child from the center
+                val child = getChildAt(cat)
+                if (child != null) {
+                    val childMid = if (orientation == VERTICAL) {
+                        (getDecoratedTop(child) + getDecoratedBottom(child)) / 2.0f
+                    } else {
+                        (getDecoratedLeft(child) + getDecoratedRight(child)) / 2.0f
                     }
-                } else {
-                    child.scaleX = scale
-                    child.scaleY = scale
+
+                    val distanceFromCenter = abs(mid - childMid)
+                    // The scaling formula
+                    val scale = if (orientation == VERTICAL) {
+                        1 - sqrt((distanceFromCenter/height).toDouble()).toFloat() * 0.66f
+                    } else {
+                        1 - sqrt((distanceFromCenter/width).toDouble()).toFloat() * 0.66f
+                    }
+
+                    if (child is LinearLayout) {
+                        (child).forEach {
+                            if (it is TextView) {
+                                // Set scale to text view
+                                it.scaleX = scale
+                                it.scaleY = scale
+                            }
+                        }
+                    } else {
+                        child.scaleX = scale
+                        child.scaleY = scale
+                    }
                 }
             }
         }

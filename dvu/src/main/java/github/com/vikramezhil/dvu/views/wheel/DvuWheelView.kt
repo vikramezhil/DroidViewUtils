@@ -44,6 +44,8 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         override var infiniteScrolling: Boolean = false
 
+        override var scaleDownEnabled: Boolean = false
+
         override var scrolling: Boolean = false
 
         override var itemTxtSize: Float = 22f
@@ -112,6 +114,8 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
             dvuWheelProps.itemTxtBold = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvItemTxtBold, false)
             dvuWheelProps.itemTxtItalic = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvItemTxtItalic, false)
             dvuWheelProps.infiniteScrolling = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvInfiniteScrolling, false)
+            dvuWheelProps.scaleDownEnabled = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvScaleDownEnabled, false)
+
             dvuWheelProps.orientation = if(typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvOrientationVertical, false)) {
                 VERTICAL
             } else {
@@ -154,40 +158,48 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         // Setting the background color
         dvu_wheel.setBackgroundColor(dvuWheelProps.bgColor)
 
-        // Wheel Adapter
-        adapter = DvuWvAdapter(context, dvuWheelProps, object: OnDvuWvListener {
+        // Layout manager
+        dvu_wheel.layoutManager = DvuWvSliderManager(context, dvuWheelProps.orientation, dvuWheelProps.scaleDownEnabled, object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
                 dvuWheelProps.scrolling = false
-                dvuWheelProps.selectedItemPos = position
 
-                // Scrolling to the selected item position
-                dvu_wheel.smoothScrollToPosition(position)
+                if (position != dvuWheelProps.selectedItemPos) {
+                    dvuWheelProps.selectedItemPos = position
 
-                // Sending an update when an item is selected
-                listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
+                    // Sending an update when an item is selected
+                    listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
+                }
+
+                adapter?.update(dvuWheelProps)
             }
 
             override fun onScrolling() {
+                dvuWheelProps.scrolling = true
+
+                adapter?.update(dvuWheelProps)
+
                 // Sending an update when the wheel is scrolling
                 listener?.onScrolling()
             }
         })
 
-        // Layout manager
-        dvu_wheel.layoutManager = DvuWvSliderManager(context, dvuWheelProps.orientation, object: OnDvuWvListener {
+        // Wheel Adapter
+        adapter = DvuWvAdapter(context, dvuWheelProps, object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
                 dvuWheelProps.scrolling = false
-                dvuWheelProps.selectedItemPos = position
-                adapter?.update(dvuWheelProps)
 
-                // Sending an update when an item is selected
-                listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
+                if (position != dvuWheelProps.selectedItemPos) {
+                    dvuWheelProps.selectedItemPos = position
+
+                    // Scrolling to the selected item position
+                    dvu_wheel.smoothScrollToPosition(position)
+
+                    // Sending an update when an item is selected
+                    listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
+                }
             }
 
             override fun onScrolling() {
-                dvuWheelProps.scrolling = true
-                adapter?.update(dvuWheelProps)
-
                 // Sending an update when the wheel is scrolling
                 listener?.onScrolling()
             }
@@ -236,6 +248,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
             dvu_wheel.smoothScrollToPosition(dvuWheelProps.selectedItemPos)
 
             dvuWheelProps.enableItemHighlight = true
+
             adapter?.update(dvuWheelProps)
         }
     }

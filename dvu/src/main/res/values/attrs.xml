@@ -16,6 +16,7 @@
         <attr name="dvuWvItemTxtItalic" format="boolean"/>
         <attr name="dvuWvOrientationVertical" format="boolean"/>
         <attr name="dvuWvInfiniteScrolling" format="boolean"/>
+        <attr name="dvuWvScaleDownEnabled" format="boolean"/>
 
         <attr name="dvuWvItemTxtSize" format="float"/>
         <attr name="dvuWvUnselectedItemTxtAlpha" format="float"/>
