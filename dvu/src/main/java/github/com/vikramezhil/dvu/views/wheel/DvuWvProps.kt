@@ -25,6 +25,8 @@ abstract class DvuWvProps {
 
     abstract var infiniteScrolling: Boolean
 
+    abstract var scaleDownEnabled: Boolean
+
     abstract var scrolling: Boolean
 
     abstract var itemTxtSize: Float
