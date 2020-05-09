@@ -1,9 +1,13 @@
 package github.com.vikramezhil.dvu.utils
 
 import android.content.Context
+import android.graphics.Color
 import android.util.DisplayMetrics
 import android.util.TypedValue
+import android.view.View
 import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
+import kotlin.math.roundToInt
 
 /**
  * Screen Utils
@@ -44,6 +48,26 @@ class DvuScreenUtils {
          */
         fun dpToPx(context: Context, value: Int) : Int {
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value.toFloat(), context.resources.displayMetrics).toInt()
+        }
+
+        /**
+         * Closes the view keyboard
+         * @param view View? The view instance
+         * @param context Context The application context
+         */
+        fun closeViewKeyboard(view: View?, context: Context) {
+            val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(view?.windowToken, 0)
+        }
+
+        /**
+         * Gets the color with alpha applied
+         * @param color Int The color to apply alpha
+         * @param ratio Float The alpha ratio
+         * @return Int The converted color with alpha applied
+         */
+        fun colorWithAlpha(color: Int, ratio: Float): Int {
+            return Color.argb((Color.alpha(color) * ratio).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
         }
     }
 }

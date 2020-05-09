@@ -1,5 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="DvuSearchView">
+        <attr name="dvuSvTxtStyle" format="reference"/>
+        <attr name="dvuSvSuggestionTitleTxtStyle" format="reference"/>
+        <attr name="dvuSvSuggestionSubTitleTxtStyle" format="reference"/>
+        <attr name="dvuSvCloseIcon" format="reference"/>
+        <attr name="dvuSvClearIcon" format="reference"/>
+        <attr name="dvuSvMicIcon" format="reference"/>
+        <attr name="dvuSvActionIcon" format="reference"/>
+
+        <attr name="dvuSvBgColor" format="color"/>
+        <attr name="dvuSvOverlayBgColor" format="color"/>
+        <attr name="dvuSvTxtColor" format="color"/>
+        <attr name="dvuSvHintTxtColor" format="color"/>
+        <attr name="dvuSvDividerColor" format="color"/>
+
+        <attr name="dvuSvHintTxt" format="string"/>
+
+        <attr name="dvuSvHeight" format="dimension"/>
+        <attr name="dvuSvSuggestionItemHeight" format="dimension"/>
+        <attr name="dvuSvMargin" format="dimension"/>
+
+        <attr name="dvuSvCornerRadius" format="float"/>
+        <attr name="dvuSvElevation" format="float"/>
+        <attr name="dvuSvAlpha" format="float"/>
+        <attr name="dvuSvOverlayAlpha" format="float"/>
+
+        <attr name="dvuSvContinuousSearch" format="boolean"/>
+        <attr name="dvuSvCloseOnOverlayTouch" format="boolean"/>
+        <attr name="dvuSvShowMicIcon" format="boolean"/>
+        <attr name="dvuSvShowActionIcon" format="boolean"/>
+    </declare-styleable>
+
     <declare-styleable name="DvuWheelView">
         <attr name="dvuWvWheelItems" format="reference"/>
         <attr name="dvuWvItemTxtStyle" format="reference"/>

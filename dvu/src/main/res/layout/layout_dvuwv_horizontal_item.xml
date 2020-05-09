@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_picker"
+    android:id="@+id/ll_dvu_wv_picker"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@android:color/transparent">
 
     <View
-        android:id="@+id/v_top_border"
+        android:id="@+id/v_dvu_wv_top_border"
         android:layout_width="@dimen/dvu_wv_divider_height"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/black"/>
 
     <TextView
-        android:id="@+id/tv_item_val"
+        android:id="@+id/tv_dvu_wv_item_val"
         android:layout_width="0dp"
         android:layout_height="@dimen/dvu_wv_item_height"
         android:layout_weight="1"
@@ -28,7 +28,7 @@
         tools:text="@string/app_name"/>
 
     <View
-        android:id="@+id/v_bottom_border"
+        android:id="@+id/v_dvu_wv_bottom_border"
         android:layout_width="@dimen/dvu_wv_divider_height"
         android:layout_height="match_parent"
         android:layout_gravity="end"

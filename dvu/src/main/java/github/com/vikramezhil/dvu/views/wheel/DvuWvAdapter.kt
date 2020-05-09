@@ -87,9 +87,9 @@ class DvuWvAdapter(private var context: Context, private var props: DvuWvProps, 
      * View holder class
      */
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        var llPicker: LinearLayout = itemView.findViewById(R.id.ll_picker)
-        val topBorder: View = itemView.findViewById(R.id.v_top_border)
-        val bottomBorder: View = itemView.findViewById(R.id.v_bottom_border)
-        val itemVal: TextView = itemView.findViewById(R.id.tv_item_val)
+        var llPicker: LinearLayout = itemView.findViewById(R.id.ll_dvu_wv_picker)
+        val topBorder: View = itemView.findViewById(R.id.v_dvu_wv_top_border)
+        val bottomBorder: View = itemView.findViewById(R.id.v_dvu_wv_bottom_border)
+        val itemVal: TextView = itemView.findViewById(R.id.tv_dvu_wv_item_val)
     }
 }

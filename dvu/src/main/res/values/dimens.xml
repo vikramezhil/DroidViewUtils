@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--  Search View  -->
+    <dimen name="dvu_sv_margin">10dp</dimen>
+    <dimen name="dvu_sv_padding">10dp</dimen>
+    <dimen name="dvu_sv_min_padding">3dp</dimen>
+    <dimen name="dvu_sv_item_divider_height">1dp</dimen>
+
     <!--  Wheel View  -->
     <dimen name="dvu_wv_divider_height">1dp</dimen>
     <dimen name="dvu_wv_item_margin">20dp</dimen>

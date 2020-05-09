@@ -142,10 +142,10 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         dvuWheelProps.height = h
         if (dvuWheelProps.orientation == VERTICAL) {
             dvuWheelProps.vPadding = (h/2) - dvuWheelProps.vPadding
-            dvu_wheel.setPadding(0, dvuWheelProps.vPadding, 0, dvuWheelProps.vPadding)
+            dvu_wv.setPadding(0, dvuWheelProps.vPadding, 0, dvuWheelProps.vPadding)
         } else {
             dvuWheelProps.hPadding = (w/2) - dvuWheelProps.hPadding
-            dvu_wheel.setPadding(dvuWheelProps.hPadding, 0, dvuWheelProps.hPadding, 0)
+            dvu_wv.setPadding(dvuWheelProps.hPadding, 0, dvuWheelProps.hPadding, 0)
         }
 
         adapter?.update(dvuWheelProps)
@@ -156,10 +156,10 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      */
     private fun initWheelView() {
         // Setting the background color
-        dvu_wheel.setBackgroundColor(dvuWheelProps.bgColor)
+        dvu_wv.setBackgroundColor(dvuWheelProps.bgColor)
 
         // Layout manager
-        dvu_wheel.layoutManager = DvuWvSliderManager(context, dvuWheelProps.orientation, dvuWheelProps.scaleDownEnabled, object: OnDvuWvListener {
+        dvu_wv.layoutManager = DvuWvSliderManager(context, dvuWheelProps.orientation, dvuWheelProps.scaleDownEnabled, object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
                 dvuWheelProps.scrolling = false
 
@@ -192,7 +192,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
                     dvuWheelProps.selectedItemPos = position
 
                     // Scrolling to the selected item position
-                    dvu_wheel.smoothScrollToPosition(position)
+                    dvu_wv.smoothScrollToPosition(position)
 
                     // Sending an update when an item is selected
                     listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
@@ -206,7 +206,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         })
 
         // Setting the adapter
-        dvu_wheel.adapter = adapter
+        dvu_wv.adapter = adapter
 
         // Refreshing the wheel
         refreshWheel(dvuWheelProps.selectedItemPos)
@@ -242,10 +242,10 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
             }
 
             if (scrollToPosition >= 0 &&  scrollToPosition < dvuWheelProps.itemsList.size) {
-                dvu_wheel.scrollToPosition(scrollToPosition)
+                dvu_wv.scrollToPosition(scrollToPosition)
             }
 
-            dvu_wheel.smoothScrollToPosition(dvuWheelProps.selectedItemPos)
+            dvu_wv.smoothScrollToPosition(dvuWheelProps.selectedItemPos)
 
             dvuWheelProps.enableItemHighlight = true
 

@@ -19,5 +19,9 @@ class DvuExampleActivity : AppCompatActivity() {
         btn_wheel_picker.setOnClickListener {
             startActivity(Intent(this, WheelPickerActivity::class.java))
         }
+
+        btn_search_view.setOnClickListener {
+            startActivity(Intent(this, SearchViewActivity::class.java))
+        }
     }
 }
