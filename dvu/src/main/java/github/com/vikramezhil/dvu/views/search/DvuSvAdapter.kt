@@ -41,6 +41,7 @@ class DvuSvAdapter(private var context: Context, private var props: DvuSvProps, 
             listener.onSuggestionItemClicked(filterItems[it.tag as Int])
         }
 
+        holder.leftIcon.alpha = props.suggestionItemIconAlpha
         holder.leftIcon.visibility = if (filterItems[position].leftIcon != null) {
             holder.leftIcon.setImageResource(filterItems[position].leftIcon!!)
             View.VISIBLE
@@ -48,6 +49,7 @@ class DvuSvAdapter(private var context: Context, private var props: DvuSvProps, 
             View.GONE
         }
 
+        holder.rightIcon.alpha = props.suggestionItemIconAlpha
         holder.rightIcon.visibility = if (filterItems[position].rightIcon != null) {
             holder.rightIcon.setImageResource(filterItems[position].rightIcon!!)
             View.VISIBLE

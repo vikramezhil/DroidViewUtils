@@ -25,11 +25,15 @@
         <attr name="dvuSvElevation" format="float"/>
         <attr name="dvuSvAlpha" format="float"/>
         <attr name="dvuSvOverlayAlpha" format="float"/>
+        <attr name="dvuSvIconAlpha" format="float"/>
+        <attr name="dvuSvSuggestionItemIconAlpha" format="float"/>
 
+        <attr name="dvuSvOneStepSuggestionClickVerify" format="boolean"/>
         <attr name="dvuSvContinuousSearch" format="boolean"/>
         <attr name="dvuSvCloseOnOverlayTouch" format="boolean"/>
         <attr name="dvuSvShowMicIcon" format="boolean"/>
         <attr name="dvuSvShowActionIcon" format="boolean"/>
+        <attr name="dvuSvFitSystemsWindow" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="DvuWheelView">

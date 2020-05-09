@@ -77,6 +77,12 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         override var overlayAlpha: Float = 1f
 
+        override var searchViewIconAlpha: Float = 1f
+
+        override var suggestionItemIconAlpha: Float = 1f
+
+        override var oneStepSuggestionClickVerify: Boolean = false
+
         override var continuousSearch: Boolean = false
 
         override var closeOnOverlayTouch: Boolean = false
@@ -84,6 +90,8 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         override var showMicIcon: Boolean = false
 
         override var showActionIcon: Boolean = false
+
+        override var fitSystemsWindow: Boolean = false
     }
 
     private var suggestionsAdapter: DvuSvAdapter? = null
@@ -145,11 +153,15 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             dvuSearchViewProps.elevation = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvElevation, dvuSearchViewProps.elevation)
             dvuSearchViewProps.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, dvuSearchViewProps.searchViewAlpha)
             dvuSearchViewProps.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, dvuSearchViewProps.overlayAlpha)
+            dvuSearchViewProps.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, dvuSearchViewProps.searchViewIconAlpha)
+            dvuSearchViewProps.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, dvuSearchViewProps.suggestionItemIconAlpha)
 
+            dvuSearchViewProps.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, dvuSearchViewProps.oneStepSuggestionClickVerify)
             dvuSearchViewProps.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, dvuSearchViewProps.continuousSearch)
             dvuSearchViewProps.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, dvuSearchViewProps.closeOnOverlayTouch)
             dvuSearchViewProps.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, dvuSearchViewProps.showMicIcon)
             dvuSearchViewProps.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, dvuSearchViewProps.showActionIcon)
+            dvuSearchViewProps.fitSystemsWindow = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvFitSystemsWindow, dvuSearchViewProps.fitSystemsWindow)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -167,12 +179,17 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
     private fun updateViews(props: DvuSvProps) {
         // Updating the icons
         iv_dvu_sv_close_search.setImageDrawable(props.closeIcon)
+        iv_dvu_sv_close_search.alpha = props.searchViewIconAlpha
+
         iv_dvu_sv_clear_search.setImageDrawable(props.clearIcon)
+        iv_dvu_sv_clear_search.alpha = props.searchViewIconAlpha
 
         iv_dvu_sv_microphone.setImageDrawable(props.micIcon)
+        iv_dvu_sv_microphone.alpha = props.searchViewIconAlpha
         iv_dvu_sv_microphone.visibility = if (props.showMicIcon) View.VISIBLE else View.GONE
 
         iv_dvu_sv_action.setImageDrawable(props.actionIcon)
+        iv_dvu_sv_action.alpha = props.searchViewIconAlpha
         iv_dvu_sv_action.visibility = if (props.showActionIcon) View.VISIBLE else View.GONE
 
         // Updating the colors
@@ -216,9 +233,33 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
      * Initializes the views
      */
     private fun initViews() {
+        rv_dvu_sv_suggestion_list.fitsSystemWindows = dvuSearchViewProps.fitSystemsWindow
+        fl_dvu_sv.fitsSystemWindows = dvuSearchViewProps.fitSystemsWindow
+
         suggestionsAdapter = DvuSvAdapter(context, dvuSearchViewProps, object: OnDvuSvItemListener {
             override fun onSuggestionItemClicked(clickedSuggestionItem: DvuSvItem) {
+                // Sending an update on the selected suggestion item
                 listener?.onSearchSuggestionItem(clickedSuggestionItem)
+
+                when {
+                    dvuSearchViewProps.oneStepSuggestionClickVerify -> {
+                        // Setting the selected item item
+                        et_dvu_sv_search.setText(clickedSuggestionItem.title)
+
+                        if (et_dvu_sv_search.text?.isNotEmpty() == true) {
+                            // Moving the cursor to the end of the text
+                            et_dvu_sv_search.setSelection(et_dvu_sv_search.text!!.length)
+                        }
+                    }
+                    dvuSearchViewProps.continuousSearch -> {
+                        // Clearing out the existing text
+                        et_dvu_sv_search.setText("")
+                    }
+                    else -> {
+                        // Closing search view when a suggestion item is clicked
+                        iv_dvu_sv_close_search.performClick()
+                    }
+                }
             }
 
             override fun onSuggestionsFound(suggestionsFound: Boolean) {

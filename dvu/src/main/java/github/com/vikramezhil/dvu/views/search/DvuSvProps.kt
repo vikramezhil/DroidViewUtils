@@ -49,6 +49,12 @@ abstract class DvuSvProps {
 
     abstract var overlayAlpha: Float
 
+    abstract var searchViewIconAlpha: Float
+
+    abstract var suggestionItemIconAlpha: Float
+
+    abstract var oneStepSuggestionClickVerify: Boolean
+
     abstract var continuousSearch: Boolean
 
     abstract var closeOnOverlayTouch: Boolean
@@ -56,4 +62,6 @@ abstract class DvuSvProps {
     abstract var showMicIcon: Boolean
 
     abstract var showActionIcon: Boolean
+
+    abstract var fitSystemsWindow: Boolean
 }
