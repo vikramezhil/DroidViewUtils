@@ -14,7 +14,7 @@ import kotlin.math.roundToInt
  * @author vikramezhil
  */
 
-open class DvuScreenUtils {
+class DvuScreenUtils {
     companion object {
         /**
          * Gets the screen width

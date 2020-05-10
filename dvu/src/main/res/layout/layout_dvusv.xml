@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_dvu_sv"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <View
         android:id="@+id/view_dvu_sv_overlay"
@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/ll_dvu_sv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/dvu_sv_margin"
         android:orientation="vertical">
 
