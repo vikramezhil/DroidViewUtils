@@ -16,7 +16,7 @@ class DvuEditText @JvmOverloads constructor(context: Context, attrs: AttributeSe
     private var listener: OnDvuEtListener? = null
 
     override fun onKeyPreIme(keyCode: Int, event: KeyEvent): Boolean {
-        if (event.keyCode == KeyEvent.KEYCODE_BACK) {
+        if (event.keyCode == KeyEvent.KEYCODE_BACK || event.keyCode == KeyEvent.KEYCODE_SEARCH) {
             listener?.onKeyboardClosed()
 
             return true

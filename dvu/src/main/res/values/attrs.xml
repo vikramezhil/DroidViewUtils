@@ -33,7 +33,7 @@
         <attr name="dvuSvCloseOnOverlayTouch" format="boolean"/>
         <attr name="dvuSvShowMicIcon" format="boolean"/>
         <attr name="dvuSvShowActionIcon" format="boolean"/>
-        <attr name="dvuSvFitSystemsWindow" format="boolean"/>
+        <attr name="dvuSvSuggestionsForceScroll" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="DvuWheelView">

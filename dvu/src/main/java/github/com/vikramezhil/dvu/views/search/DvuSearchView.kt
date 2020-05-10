@@ -14,11 +14,14 @@ import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
 import androidx.annotation.AttrRes
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import github.com.vikramezhil.dvu.R
 import github.com.vikramezhil.dvu.utils.DvuScreenUtils
 import github.com.vikramezhil.dvu.views.edittext.OnDvuEtListener
 import kotlinx.android.synthetic.main.layout_dvusv.view.*
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.collections.ArrayList
+import kotlin.math.absoluteValue
 
 /**
  * Droid View Utils - Search View
@@ -91,10 +94,11 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         override var showActionIcon: Boolean = false
 
-        override var fitSystemsWindow: Boolean = false
+        override var suggestionsForceScroll: Boolean = false
     }
 
     private var suggestionsAdapter: DvuSvAdapter? = null
+    private var verticalScrollOffset = AtomicInteger(0)
     private var listener: OnDvuSvListener? = null
 
     init {
@@ -161,7 +165,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             dvuSearchViewProps.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, dvuSearchViewProps.closeOnOverlayTouch)
             dvuSearchViewProps.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, dvuSearchViewProps.showMicIcon)
             dvuSearchViewProps.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, dvuSearchViewProps.showActionIcon)
-            dvuSearchViewProps.fitSystemsWindow = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvFitSystemsWindow, dvuSearchViewProps.fitSystemsWindow)
+            dvuSearchViewProps.suggestionsForceScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvSuggestionsForceScroll, dvuSearchViewProps.suggestionsForceScroll)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -233,9 +237,6 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
      * Initializes the views
      */
     private fun initViews() {
-        rv_dvu_sv_suggestion_list.fitsSystemWindows = dvuSearchViewProps.fitSystemsWindow
-        fl_dvu_sv.fitsSystemWindows = dvuSearchViewProps.fitSystemsWindow
-
         suggestionsAdapter = DvuSvAdapter(context, dvuSearchViewProps, object: OnDvuSvItemListener {
             override fun onSuggestionItemClicked(clickedSuggestionItem: DvuSvItem) {
                 // Sending an update on the selected suggestion item
@@ -249,6 +250,8 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                         if (et_dvu_sv_search.text?.isNotEmpty() == true) {
                             // Moving the cursor to the end of the text
                             et_dvu_sv_search.setSelection(et_dvu_sv_search.text!!.length)
+
+                            clearSuggestions(false)
                         }
                     }
                     dvuSearchViewProps.continuousSearch -> {
@@ -366,9 +369,9 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                     listener?.onSearchTextChanged(dvuSearchViewProps.oldQuery, searchText)
 
                     // Filtering the items
-                    suggestionsAdapter?.filterItems(searchText)
+                    suggestionsAdapter?.filterItems(searchText, true)
                 } else if (searchText.isEmpty()) {
-                    clearSuggestions()
+                    clearSuggestions(true)
                 }
 
                 dvuSearchViewProps.oldQuery = searchText
@@ -401,14 +404,14 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             et_dvu_sv_search.clearFocus()
 
             // Clearing out the suggestions
-            clearSuggestions()
+            clearSuggestions(true)
         }
 
         iv_dvu_sv_clear_search.setOnClickListener {
             et_dvu_sv_search.setText("")
 
             // Clearing out the suggestions
-            clearSuggestions()
+            clearSuggestions(true)
         }
 
         iv_dvu_sv_microphone.setOnClickListener {
@@ -417,6 +420,53 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         iv_dvu_sv_action.setOnClickListener {
             listener?.onActionItemClicked()
+        }
+
+        if (dvuSearchViewProps.suggestionsForceScroll) {
+            rv_dvu_sv_suggestion_list.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
+                val y = oldBottom - bottom
+                if (y.absoluteValue > 0) {
+                    // If y is positive the keyboard is up else it is down
+                    rv_dvu_sv_suggestion_list.post {
+                        if (y > 0 || verticalScrollOffset.get().absoluteValue >= y.absoluteValue) {
+                            rv_dvu_sv_suggestion_list.scrollBy(0, y)
+
+                            rv_dvu_sv_suggestion_list.postDelayed({
+                                rv_dvu_sv_suggestion_list.scrollToPosition(0)
+                            }, dvuSearchViewProps.scrollDelay)
+                        } else {
+                            rv_dvu_sv_suggestion_list.scrollBy(0, verticalScrollOffset.get())
+                        }
+                    }
+                }
+            }
+
+            rv_dvu_sv_suggestion_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                var state = AtomicInteger(RecyclerView.SCROLL_STATE_IDLE)
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
+                    when (newState) {
+                        RecyclerView.SCROLL_STATE_IDLE -> {
+                            if (!state.compareAndSet(RecyclerView.SCROLL_STATE_SETTLING, newState)) {
+                                state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
+                            }
+                        }
+                        RecyclerView.SCROLL_STATE_DRAGGING -> {
+                            state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
+                        }
+                        RecyclerView.SCROLL_STATE_SETTLING -> {
+                            state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
+                        }
+                    }
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (state.get() != RecyclerView.SCROLL_STATE_IDLE) {
+                        verticalScrollOffset.getAndAdd(dy)
+                    }
+                }
+            })
         }
     }
 
@@ -438,7 +488,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         // Showing the suggestions item list view
         rv_dvu_sv_suggestion_list.visibility = View.VISIBLE
-        suggestionsAdapter?.filterItems(et_dvu_sv_search.text.toString())
+        suggestionsAdapter?.filterItems(et_dvu_sv_search.text.toString(), true)
     }
 
     /**
@@ -467,9 +517,10 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
     /**
      * Clears out the suggestions
+     * @param showDefaultItems The show default items status
      */
-    private fun clearSuggestions() {
-        suggestionsAdapter?.filterItems("")
+    private fun clearSuggestions(showDefaultItems: Boolean) {
+        suggestionsAdapter?.filterItems("", showDefaultItems)
     }
 
     /**

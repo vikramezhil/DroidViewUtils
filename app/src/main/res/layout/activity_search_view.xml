@@ -16,11 +16,13 @@
         app:dvuSvBgColor="@color/colorAccent"
         app:dvuSvHintTxtColor="@android:color/white"
         app:dvuSvTxtColor="@android:color/white"
-        app:dvuSvOverlayBgColor="@android:color/white"
+        app:dvuSvOverlayBgColor="@android:color/black"
         app:dvuSvDividerColor="@android:color/black"
         app:dvuSvShowMicIcon="true"
-        app:dvuSvContinuousSearch="true"
+        app:dvuSvContinuousSearch="false"
         app:dvuSvCloseOnOverlayTouch="true"
         app:dvuSvCornerRadius="30"
-        app:dvuSvOneStepSuggestionClickVerify="true"/>
+        app:dvuSvOverlayAlpha="0.7"
+        app:dvuSvOneStepSuggestionClickVerify="true"
+        app:dvuSvSuggestionsForceScroll="true"/>
 </FrameLayout>

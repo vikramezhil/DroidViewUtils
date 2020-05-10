@@ -107,7 +107,7 @@ class DvuSvAdapter(private var context: Context, private var props: DvuSvProps, 
      */
     fun updateDefaultItems(currActiveItem: String, items: ArrayList<DvuSvItem>?) {
         this.defaultItems = items ?: ArrayList()
-        filterItems(currActiveItem)
+        filterItems(currActiveItem, true)
     }
 
     /**
@@ -117,14 +117,15 @@ class DvuSvAdapter(private var context: Context, private var props: DvuSvProps, 
      */
     fun updateItems(currActiveItem: String, items: ArrayList<DvuSvItem>?) {
         this.items = items ?: ArrayList()
-        filterItems(currActiveItem)
+        filterItems(currActiveItem, true)
     }
 
     /**
      * Filters the items based on current active item
      * @param currActiveItem String The current active item
+     * @param showDefaultItems The show default items status
      */
-    fun filterItems(currActiveItem: String) {
+    fun filterItems(currActiveItem: String, showDefaultItems: Boolean) {
         filterItems.clear()
         if (currActiveItem.isNotEmpty()) {
             val finalItems: ArrayList<DvuSvItem> = ArrayList()
@@ -136,7 +137,7 @@ class DvuSvAdapter(private var context: Context, private var props: DvuSvProps, 
                     filterItems.add(it)
                 }
             }
-        } else if (defaultItems.size > 0) {
+        } else if (defaultItems.size > 0 && showDefaultItems) {
             filterItems.addAll(defaultItems)
         }
 
