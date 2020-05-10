@@ -9,6 +9,7 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
@@ -17,11 +18,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import github.com.vikramezhil.dvu.R
 import github.com.vikramezhil.dvu.utils.DvuScreenUtils
+import github.com.vikramezhil.dvu.utils.isAcceptingText
 import github.com.vikramezhil.dvu.views.edittext.OnDvuEtListener
 import kotlinx.android.synthetic.main.layout_dvusv.view.*
-import java.util.concurrent.atomic.AtomicInteger
-import kotlin.collections.ArrayList
-import kotlin.math.absoluteValue
 
 /**
  * Droid View Utils - Search View
@@ -94,11 +93,10 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         override var showActionIcon: Boolean = false
 
-        override var suggestionsForceScroll: Boolean = false
+        override var closeKeyboardOnSuggestionsScroll: Boolean = false
     }
 
     private var suggestionsAdapter: DvuSvAdapter? = null
-    private var verticalScrollOffset = AtomicInteger(0)
     private var listener: OnDvuSvListener? = null
 
     init {
@@ -165,7 +163,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             dvuSearchViewProps.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, dvuSearchViewProps.closeOnOverlayTouch)
             dvuSearchViewProps.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, dvuSearchViewProps.showMicIcon)
             dvuSearchViewProps.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, dvuSearchViewProps.showActionIcon)
-            dvuSearchViewProps.suggestionsForceScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvSuggestionsForceScroll, dvuSearchViewProps.suggestionsForceScroll)
+            dvuSearchViewProps.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, dvuSearchViewProps.closeKeyboardOnSuggestionsScroll)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -274,7 +272,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             }
         })
 
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(context)
         rv_dvu_sv_suggestion_list.layoutManager = layoutManager
         rv_dvu_sv_suggestion_list.adapter = suggestionsAdapter
 
@@ -386,6 +384,18 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             }
         })
 
+        if (dvuSearchViewProps.closeKeyboardOnSuggestionsScroll) {
+            rv_dvu_sv_suggestion_list.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                    if (context.isAcceptingText()) {
+                        DvuScreenUtils.closeViewKeyboard(et_dvu_sv_search, context)
+                    }
+                }
+            })
+        }
+
         iv_dvu_sv_close_search.setOnClickListener {
             // Closing the keyboard
             DvuScreenUtils.closeViewKeyboard(et_dvu_sv_search, context)
@@ -420,53 +430,6 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
         iv_dvu_sv_action.setOnClickListener {
             listener?.onActionItemClicked()
-        }
-
-        if (dvuSearchViewProps.suggestionsForceScroll) {
-            rv_dvu_sv_suggestion_list.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
-                val y = oldBottom - bottom
-                if (y.absoluteValue > 0) {
-                    // If y is positive the keyboard is up else it is down
-                    rv_dvu_sv_suggestion_list.post {
-                        if (y > 0 || verticalScrollOffset.get().absoluteValue >= y.absoluteValue) {
-                            rv_dvu_sv_suggestion_list.scrollBy(0, y)
-
-                            rv_dvu_sv_suggestion_list.postDelayed({
-                                rv_dvu_sv_suggestion_list.scrollToPosition(0)
-                            }, dvuSearchViewProps.scrollDelay)
-                        } else {
-                            rv_dvu_sv_suggestion_list.scrollBy(0, verticalScrollOffset.get())
-                        }
-                    }
-                }
-            }
-
-            rv_dvu_sv_suggestion_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                var state = AtomicInteger(RecyclerView.SCROLL_STATE_IDLE)
-
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
-                    when (newState) {
-                        RecyclerView.SCROLL_STATE_IDLE -> {
-                            if (!state.compareAndSet(RecyclerView.SCROLL_STATE_SETTLING, newState)) {
-                                state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
-                            }
-                        }
-                        RecyclerView.SCROLL_STATE_DRAGGING -> {
-                            state.compareAndSet(RecyclerView.SCROLL_STATE_IDLE, newState)
-                        }
-                        RecyclerView.SCROLL_STATE_SETTLING -> {
-                            state.compareAndSet(RecyclerView.SCROLL_STATE_DRAGGING, newState)
-                        }
-                    }
-                }
-
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (state.get() != RecyclerView.SCROLL_STATE_IDLE) {
-                        verticalScrollOffset.getAndAdd(dy)
-                    }
-                }
-            })
         }
     }
 

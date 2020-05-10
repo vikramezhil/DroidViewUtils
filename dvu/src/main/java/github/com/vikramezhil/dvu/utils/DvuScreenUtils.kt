@@ -14,7 +14,7 @@ import kotlin.math.roundToInt
  * @author vikramezhil
  */
 
-class DvuScreenUtils {
+open class DvuScreenUtils {
     companion object {
         /**
          * Gets the screen width
@@ -70,4 +70,14 @@ class DvuScreenUtils {
             return Color.argb((Color.alpha(color) * ratio).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
         }
     }
+}
+
+/**
+ * Check if input manager is accepting text
+ * @receiver context Context The application context
+ * @return The input manager accepting text status
+ */
+fun Context.isAcceptingText(): Boolean {
+    val inputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    return inputMethodManager.isAcceptingText
 }

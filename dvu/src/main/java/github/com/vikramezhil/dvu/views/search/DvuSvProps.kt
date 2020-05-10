@@ -5,9 +5,6 @@ import android.graphics.drawable.Drawable
 data class DvuSvItem(var leftIcon: Int? = null, var rightIcon: Int? = null, var title: String = "", var subTitle: String? = null)
 
 abstract class DvuSvProps {
-
-    var scrollDelay: Long = 50
-
     abstract var hintText: String?
 
     abstract var oldQuery: String?
@@ -66,5 +63,5 @@ abstract class DvuSvProps {
 
     abstract var showActionIcon: Boolean
 
-    abstract var suggestionsForceScroll: Boolean
+    abstract var closeKeyboardOnSuggestionsScroll: Boolean
 }
