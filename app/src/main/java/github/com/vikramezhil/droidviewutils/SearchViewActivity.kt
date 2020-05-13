@@ -21,7 +21,7 @@ class SearchViewActivity: AppCompatActivity() {
             suggestions.add(DvuSvItem(null, R.drawable.ic_dvu_icon_placeholder, "New Counter $it", "Sub New Counter ${it*2}"))
         }
 
-        searchView.setDefaultSuggestions(defaultSuggestions)
-        searchView.setSuggestions(suggestions)
+        searchView.properties.defaultSuggestions = defaultSuggestions
+        searchView.properties.suggestions = suggestions
     }
 }

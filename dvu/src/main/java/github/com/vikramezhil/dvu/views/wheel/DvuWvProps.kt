@@ -1,5 +1,10 @@
 package github.com.vikramezhil.dvu.views.wheel
 
+/**
+ * Droid View Utils - Wheel View Props
+ * @author vikramezhil
+ */
+
 abstract class DvuWvProps {
     abstract var itemsList: ArrayList<String>
 
@@ -46,6 +51,4 @@ abstract class DvuWvProps {
     abstract var selectedItemPos: Int
 
     abstract var orientation: Int
-
-    abstract var initialScrollDelay: Long
 }

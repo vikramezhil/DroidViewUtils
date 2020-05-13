@@ -7,7 +7,11 @@
     <dimen name="dvu_sv_item_divider_height">1dp</dimen>
 
     <!--  Wheel View  -->
+    <dimen name="dvu_wv_min_height">300dp</dimen>
     <dimen name="dvu_wv_divider_height">1dp</dimen>
     <dimen name="dvu_wv_item_margin">20dp</dimen>
     <dimen name="dvu_wv_item_height">100dp</dimen>
+    <dimen name="dvu_wv_v_padding">5dp</dimen>
+    <dimen name="dvu_wv_h_padding">75dp</dimen>
+    <dimen name="dvu_wv_item_txt_size">12sp</dimen>
 </resources>

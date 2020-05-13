@@ -29,59 +29,145 @@ import kotlinx.android.synthetic.main.layout_dvusv.view.*
 
 class DvuSearchView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
 
-    private var dvuSearchViewProps = object: DvuSvProps() {
-        override var hintText: String? = null
+    private var suggestionsAdapter: DvuSvAdapter? = null
+    private var listener: OnDvuSvListener? = null
+    private var oldQuery: String? = null
+    private var placeHolderIcon: Drawable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, context.theme)
+    } else {
+        @Suppress("DEPRECATION")
+        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
+    }
 
-        override var oldQuery: String? = null
+    val properties = object: DvuSvProps() {
+        override var hintText: String? = null
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var textStyle: Int = 0
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var suggestionTitleTextStyle: Int = 0
+            set(value) {
+                field = value
+                refreshAdapter()
+            }
 
         override var suggestionSubTitleTextStyle: Int = 0
+            set(value) {
+                field = value
+                refreshAdapter()
+            }
 
         override var bgColor: Int = Color.WHITE
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var overlayBgColor: Int = Color.WHITE
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var textColor: Int = Color.BLACK
+            set(value) {
+                field = value
+                updateViews()
+                refreshAdapter()
+            }
 
         override var hintTextColor: Int = Color.BLACK
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var dividerColor: Int = Color.BLACK
-
-        override var placeHolderIcon: Drawable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, context.theme)
-        } else {
-            @Suppress("DEPRECATION")
-            resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
-        }
+            set(value) {
+                field = value
+                refreshAdapter()
+            }
 
         override var closeIcon: Drawable? = placeHolderIcon
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var clearIcon: Drawable? = placeHolderIcon
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var micIcon: Drawable? = placeHolderIcon
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var actionIcon: Drawable? = placeHolderIcon
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var searchViewHeight: Int = 0
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var suggestionItemHeight: Int = 0
+            set(value) {
+                field = value
+                refreshAdapter()
+            }
 
         override var margin: Int = 0
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var cornerRadius: Float = 0f
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var elevation: Float = 0f
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var searchViewAlpha: Float = 1f
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var overlayAlpha: Float = 1f
 
         override var searchViewIconAlpha: Float = 1f
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var suggestionItemIconAlpha: Float = 1f
+            set(value) {
+                field = value
+                refreshAdapter()
+            }
 
         override var oneStepSuggestionClickVerify: Boolean = false
 
@@ -90,14 +176,31 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         override var closeOnOverlayTouch: Boolean = false
 
         override var showMicIcon: Boolean = false
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var showActionIcon: Boolean = false
+            set(value) {
+                field = value
+                updateViews()
+            }
 
         override var closeKeyboardOnSuggestionsScroll: Boolean = false
-    }
 
-    private var suggestionsAdapter: DvuSvAdapter? = null
-    private var listener: OnDvuSvListener? = null
+        override var defaultSuggestions: ArrayList<DvuSvItem>? = null
+            set(value) {
+                field = value
+                setDefaultSuggestions()
+            }
+
+        override var suggestions: ArrayList<DvuSvItem>? = null
+            set(value) {
+                field = value
+                setSuggestions()
+            }
+    }
 
     init {
         inflate(context, R.layout.layout_dvusv, this)
@@ -116,54 +219,54 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.DvuSearchView, 0, 0)
 
         try {
-            dvuSearchViewProps.hintText = typedArray.getString(R.styleable.DvuSearchView_dvuSvHintTxt)
+            properties.hintText = typedArray.getString(R.styleable.DvuSearchView_dvuSvHintTxt)
 
-            dvuSearchViewProps.textStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvTxtStyle, dvuSearchViewProps.textStyle)
-            dvuSearchViewProps.suggestionTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionTitleTxtStyle, dvuSearchViewProps.suggestionTitleTextStyle)
-            dvuSearchViewProps.suggestionSubTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionSubTitleTxtStyle, dvuSearchViewProps.suggestionSubTitleTextStyle)
-            dvuSearchViewProps.bgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvBgColor, dvuSearchViewProps.bgColor)
-            dvuSearchViewProps.overlayBgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvOverlayBgColor, dvuSearchViewProps.overlayBgColor)
-            dvuSearchViewProps.textColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvTxtColor, dvuSearchViewProps.textColor)
-            dvuSearchViewProps.hintTextColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvHintTxtColor, dvuSearchViewProps.hintTextColor)
-            dvuSearchViewProps.dividerColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvDividerColor, dvuSearchViewProps.dividerColor)
+            properties.textStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvTxtStyle, properties.textStyle)
+            properties.suggestionTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionTitleTxtStyle, properties.suggestionTitleTextStyle)
+            properties.suggestionSubTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionSubTitleTxtStyle, properties.suggestionSubTitleTextStyle)
+            properties.bgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvBgColor, properties.bgColor)
+            properties.overlayBgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvOverlayBgColor, properties.overlayBgColor)
+            properties.textColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvTxtColor, properties.textColor)
+            properties.hintTextColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvHintTxtColor, properties.hintTextColor)
+            properties.dividerColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvDividerColor, properties.dividerColor)
 
             val closeIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvCloseIcon)
             if (closeIcon != null) {
-                dvuSearchViewProps.closeIcon = closeIcon
+                properties.closeIcon = closeIcon
             }
 
             val clearIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvClearIcon)
             if (clearIcon != null) {
-                dvuSearchViewProps.clearIcon = clearIcon
+                properties.clearIcon = clearIcon
             }
 
             val micIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvMicIcon)
             if (micIcon != null) {
-                dvuSearchViewProps.micIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvMicIcon)
+                properties.micIcon = micIcon
             }
 
             val actionIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvActionIcon)
             if (actionIcon != null) {
-                dvuSearchViewProps.actionIcon = actionIcon
+                properties.actionIcon = actionIcon
             }
 
-            dvuSearchViewProps.searchViewHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvHeight, dvuSearchViewProps.searchViewHeight)
-            dvuSearchViewProps.suggestionItemHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvSuggestionItemHeight, dvuSearchViewProps.suggestionItemHeight)
-            dvuSearchViewProps.margin = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvMargin, dvuSearchViewProps.margin)
+            properties.searchViewHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvHeight, properties.searchViewHeight)
+            properties.suggestionItemHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvSuggestionItemHeight, properties.suggestionItemHeight)
+            properties.margin = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvMargin, properties.margin)
 
-            dvuSearchViewProps.cornerRadius = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvCornerRadius, dvuSearchViewProps.cornerRadius)
-            dvuSearchViewProps.elevation = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvElevation, dvuSearchViewProps.elevation)
-            dvuSearchViewProps.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, dvuSearchViewProps.searchViewAlpha)
-            dvuSearchViewProps.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, dvuSearchViewProps.overlayAlpha)
-            dvuSearchViewProps.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, dvuSearchViewProps.searchViewIconAlpha)
-            dvuSearchViewProps.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, dvuSearchViewProps.suggestionItemIconAlpha)
+            properties.cornerRadius = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvCornerRadius, properties.cornerRadius)
+            properties.elevation = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvElevation, properties.elevation)
+            properties.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, properties.searchViewAlpha)
+            properties.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, properties.overlayAlpha)
+            properties.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, properties.searchViewIconAlpha)
+            properties.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, properties.suggestionItemIconAlpha)
 
-            dvuSearchViewProps.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, dvuSearchViewProps.oneStepSuggestionClickVerify)
-            dvuSearchViewProps.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, dvuSearchViewProps.continuousSearch)
-            dvuSearchViewProps.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, dvuSearchViewProps.closeOnOverlayTouch)
-            dvuSearchViewProps.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, dvuSearchViewProps.showMicIcon)
-            dvuSearchViewProps.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, dvuSearchViewProps.showActionIcon)
-            dvuSearchViewProps.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, dvuSearchViewProps.closeKeyboardOnSuggestionsScroll)
+            properties.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, properties.oneStepSuggestionClickVerify)
+            properties.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, properties.continuousSearch)
+            properties.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, properties.closeOnOverlayTouch)
+            properties.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, properties.showMicIcon)
+            properties.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, properties.showActionIcon)
+            properties.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, properties.closeKeyboardOnSuggestionsScroll)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -171,14 +274,20 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
 
         // Updating the views
-        updateViews(dvuSearchViewProps)
+        updateViews()
+
+        // Initializing the suggestions adapter
+        initSuggestionsAdapter()
+
+        // Initializing the view listeners
+        initViewListeners()
     }
 
     /**
      * Updates the views
-     * @param props DvuSvProps The search view props
+     * @param props DvuSvProps The search view properties
      */
-    private fun updateViews(props: DvuSvProps) {
+    private fun updateViews(props: DvuSvProps = this.properties) {
         // Updating the icons
         iv_dvu_sv_close_search.setImageDrawable(props.closeIcon)
         iv_dvu_sv_close_search.alpha = props.searchViewIconAlpha
@@ -226,22 +335,19 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
         cv_dvu_sv.radius = props.cornerRadius
         cv_dvu_sv.cardElevation = props.elevation
-
-        // Initializing the views
-        initViews()
     }
 
     /**
-     * Initializes the views
+     * Initializes the suggestion adapter
      */
-    private fun initViews() {
-        suggestionsAdapter = DvuSvAdapter(context, dvuSearchViewProps, object: OnDvuSvItemListener {
+    private fun initSuggestionsAdapter() {
+        suggestionsAdapter = DvuSvAdapter(context, properties, object: OnDvuSvItemListener {
             override fun onSuggestionItemClicked(clickedSuggestionItem: DvuSvItem) {
                 // Sending an update on the selected suggestion item
                 listener?.onSearchSuggestionItem(clickedSuggestionItem)
 
                 when {
-                    dvuSearchViewProps.oneStepSuggestionClickVerify -> {
+                    properties.oneStepSuggestionClickVerify -> {
                         // Setting the selected item item
                         et_dvu_sv_search.setText(clickedSuggestionItem.title)
 
@@ -252,7 +358,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                             clearSuggestions(false)
                         }
                     }
-                    dvuSearchViewProps.continuousSearch -> {
+                    properties.continuousSearch -> {
                         // Clearing out the existing text
                         et_dvu_sv_search.setText("")
                     }
@@ -275,9 +381,6 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         val layoutManager = LinearLayoutManager(context)
         rv_dvu_sv_suggestion_list.layoutManager = layoutManager
         rv_dvu_sv_suggestion_list.adapter = suggestionsAdapter
-
-        // Initializing the view listeners
-        initViewListeners()
     }
 
     /**
@@ -296,7 +399,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                 // Sending an update on the searched text
                 listener?.onSearchText(et_dvu_sv_search.text.toString())
 
-                if (dvuSearchViewProps.continuousSearch) {
+                if (properties.continuousSearch) {
                     // Clearing out the existing text
                     et_dvu_sv_search.setText("")
                 } else {
@@ -362,9 +465,9 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val searchText = et_dvu_sv_search.text.toString()
-                if (dvuSearchViewProps.oldQuery?.equals(searchText) == false) {
+                if (oldQuery?.equals(searchText) == false) {
                     // Sending an update that the search text has changed
-                    listener?.onSearchTextChanged(dvuSearchViewProps.oldQuery, searchText)
+                    listener?.onSearchTextChanged(oldQuery, searchText)
 
                     // Filtering the items
                     suggestionsAdapter?.filterItems(searchText, true)
@@ -372,7 +475,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                     clearSuggestions(true)
                 }
 
-                dvuSearchViewProps.oldQuery = searchText
+                oldQuery = searchText
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -384,7 +487,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             }
         })
 
-        if (dvuSearchViewProps.closeKeyboardOnSuggestionsScroll) {
+        if (properties.closeKeyboardOnSuggestionsScroll) {
             rv_dvu_sv_suggestion_list.addOnScrollListener(object: RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
@@ -403,8 +506,8 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
             // Hiding close and clear icons and showing the mic and action icons if applicable
             iv_dvu_sv_close_search.visibility = View.GONE
             iv_dvu_sv_clear_search.visibility = View.GONE
-            iv_dvu_sv_microphone.visibility = if (dvuSearchViewProps.showMicIcon) View.VISIBLE else View.GONE
-            iv_dvu_sv_action.visibility = if (dvuSearchViewProps.showActionIcon) View.VISIBLE else View.GONE
+            iv_dvu_sv_microphone.visibility = if (properties.showMicIcon) View.VISIBLE else View.GONE
+            iv_dvu_sv_action.visibility = if (properties.showActionIcon) View.VISIBLE else View.GONE
 
             // Removing the overlay layout
             removeOverlayLayout()
@@ -434,20 +537,28 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     /**
+     * Refreshes the adapter
+     * @param props DvuSvProps The search view properties
+     */
+    private fun refreshAdapter(props: DvuSvProps = this.properties) {
+        suggestionsAdapter?.refreshItems(props)
+    }
+
+    /**
      * Adds the overlay layout
      */
     private fun addOverlayLayout() {
-        view_dvu_sv_overlay?.setBackgroundColor(dvuSearchViewProps.overlayBgColor)
-        view_dvu_sv_overlay?.alpha = dvuSearchViewProps.overlayAlpha
+        view_dvu_sv_overlay?.setBackgroundColor(properties.overlayBgColor)
+        view_dvu_sv_overlay?.alpha = properties.overlayAlpha
         view_dvu_sv_overlay?.visibility = View.VISIBLE
         view_dvu_sv_overlay?.setOnClickListener {
-            if (iv_dvu_sv_close_search.visibility == View.VISIBLE && dvuSearchViewProps.closeOnOverlayTouch) {
+            if (iv_dvu_sv_close_search.visibility == View.VISIBLE && properties.closeOnOverlayTouch) {
                 iv_dvu_sv_close_search.performClick()
             }
         }
 
         // Removing alpha from search view when overlay is added
-        cv_dvu_sv.setCardBackgroundColor(DvuScreenUtils.colorWithAlpha(dvuSearchViewProps.bgColor, 1f))
+        cv_dvu_sv.setCardBackgroundColor(DvuScreenUtils.colorWithAlpha(properties.bgColor, 1f))
 
         // Showing the suggestions item list view
         rv_dvu_sv_suggestion_list.visibility = View.VISIBLE
@@ -462,7 +573,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         view_dvu_sv_overlay?.setOnClickListener(null)
 
         // Adding back alpha to search view when overlay is removed
-        cv_dvu_sv.setCardBackgroundColor(DvuScreenUtils.colorWithAlpha(dvuSearchViewProps.bgColor, dvuSearchViewProps.searchViewAlpha))
+        cv_dvu_sv.setCardBackgroundColor(DvuScreenUtils.colorWithAlpha(properties.bgColor, properties.searchViewAlpha))
 
         // Hiding the suggestions item list view
         rv_dvu_sv_suggestion_list.visibility = View.GONE
@@ -487,26 +598,26 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     /**
+     * Sets the default suggestions
+     * @param props DvuSvProps The search view properties
+     */
+    private fun setDefaultSuggestions(props: DvuSvProps = this.properties) {
+        suggestionsAdapter?.updateDefaultItems(et_dvu_sv_search.text.toString(), props.defaultSuggestions)
+    }
+
+    /**
+     * Sets the suggestions
+     * @param props DvuSvProps The search view properties
+     */
+    private fun setSuggestions(props: DvuSvProps = this.properties) {
+        suggestionsAdapter?.updateItems(et_dvu_sv_search.text.toString(), props.suggestions)
+    }
+
+    /**
      * Sets the search view listener
      * @param listener OnDvuSvListener? The class instance which implements the listener
      */
     fun setOnDvuSvListener(listener: OnDvuSvListener?) {
         this.listener = listener
-    }
-
-    /**
-     * Sets the default suggestions
-     * @param defaultSuggestionsList ArrayList<DvuSvItem>? The default suggestions list
-     */
-    fun setDefaultSuggestions(defaultSuggestionsList: ArrayList<DvuSvItem>?) {
-        suggestionsAdapter?.updateDefaultItems(et_dvu_sv_search.text.toString(), defaultSuggestionsList)
-    }
-
-    /**
-     * Sets the suggestions
-     * @param suggestionsList ArrayList<DvuSvItem>? The suggestions list
-     */
-    fun setSuggestions(suggestionsList: ArrayList<DvuSvItem>?) {
-        suggestionsAdapter?.updateItems(et_dvu_sv_search.text.toString(), suggestionsList)
     }
 }

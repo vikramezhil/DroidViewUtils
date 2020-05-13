@@ -101,6 +101,15 @@ class DvuSvAdapter(private var context: Context, private var props: DvuSvProps, 
     }
 
     /**
+     * Refreshes the items
+     * @param props DvuSvProps The item properties
+     */
+    fun refreshItems(props: DvuSvProps) {
+        this.props = props
+        notifyDataSetChanged()
+    }
+
+    /**
      * Updates the search view default suggestions items
      * @param currActiveItem String The current active item
      * @param items ArrayList<DvuSvItem>? The items list

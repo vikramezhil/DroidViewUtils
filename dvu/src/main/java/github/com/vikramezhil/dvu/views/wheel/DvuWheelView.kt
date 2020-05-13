@@ -9,7 +9,6 @@ import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
 import androidx.annotation.AttrRes
 import github.com.vikramezhil.dvu.R
-import github.com.vikramezhil.dvu.utils.DvuScreenUtils
 import kotlinx.android.synthetic.main.layout_dvuwv.view.*
 
 /**
@@ -19,7 +18,7 @@ import kotlinx.android.synthetic.main.layout_dvuwv.view.*
 
 class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
 
-    private var dvuWheelProps = object: DvuWvProps() {
+    private var properties = object: DvuWvProps() {
         override var itemsList: ArrayList<String> = ArrayList()
 
         override var bgColor: Int = Color.BLACK
@@ -48,25 +47,23 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         override var scrolling: Boolean = false
 
-        override var itemTxtSize: Float = 22f
+        override var itemTxtSize: Float = resources.getDimension(R.dimen.dvu_wv_item_txt_size)
 
         override var selectedItemTxtAlpha: Float = 1f
 
         override var unselectedItemTxtAlpha: Float = 1f
 
-        override var height: Int = DvuScreenUtils.dpToPx(context, 300)
+        override var height: Int = resources.getDimensionPixelSize(R.dimen.dvu_wv_min_height)
 
-        override var vPadding: Int = DvuScreenUtils.dpToPx(context, 5)
+        override var vPadding: Int = resources.getDimensionPixelSize(R.dimen.dvu_wv_v_padding)
 
-        override var hPadding: Int = DvuScreenUtils.dpToPx(context, 75)
+        override var hPadding: Int = resources.getDimensionPixelSize(R.dimen.dvu_wv_h_padding)
 
         override var itemTextStyle: Int = 0
 
         override var selectedItemPos: Int = 0
 
         override var orientation: Int = HORIZONTAL
-
-        override var initialScrollDelay: Long = 300
     }
 
     private var adapter: DvuWvAdapter? = null
@@ -75,7 +72,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
     init {
         View.inflate(context, R.layout.layout_dvuwv, this)
 
-        minimumHeight = dvuWheelProps.height
+        minimumHeight = properties.height
 
         init(context, attrs)
     }
@@ -93,39 +90,40 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         try {
             val items = typedArray.getResourceId(R.styleable.DvuWheelView_dvuWvWheelItems, 0)
             if (items != 0) {
-                dvuWheelProps.itemsList = typedArray.resources.getStringArray(items).toCollection(ArrayList())
+                properties.itemsList = typedArray.resources.getStringArray(items).toCollection(ArrayList())
             }
 
-            dvuWheelProps.itemTextStyle = typedArray.getResourceId(R.styleable.DvuWheelView_dvuWvItemTxtStyle, dvuWheelProps.itemTextStyle)
+            properties.itemTextStyle = typedArray.getResourceId(R.styleable.DvuWheelView_dvuWvItemTxtStyle, properties.itemTextStyle)
 
-            dvuWheelProps.bgColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvBgColor, Color.BLACK)
+            properties.bgColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvBgColor, Color.BLACK)
 
-            dvuWheelProps.selectedItemBgColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvSelectedItemBgColor, dvuWheelProps.bgColor)
-            dvuWheelProps.selectedItemTxtColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvSelectedItemTxtColor, Color.WHITE)
+            properties.selectedItemBgColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvSelectedItemBgColor, properties.bgColor)
+            properties.selectedItemTxtColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvSelectedItemTxtColor, Color.WHITE)
 
-            dvuWheelProps.unselectedItemBgColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvUnselectedItemBgColor, dvuWheelProps.bgColor)
-            dvuWheelProps.unselectedItemTxtColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvUnselectedItemTxtColor, Color.WHITE)
+            properties.unselectedItemBgColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvUnselectedItemBgColor, properties.bgColor)
+            properties.unselectedItemTxtColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvUnselectedItemTxtColor, Color.WHITE)
 
-            dvuWheelProps.dividerColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDividerColor, Color.WHITE)
-            dvuWheelProps.dividerColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDividerColor, Color.WHITE)
-            dvuWheelProps.dividerColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDividerColor, Color.WHITE)
+            properties.dividerColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDividerColor, Color.WHITE)
+            properties.dividerColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDividerColor, Color.WHITE)
+            properties.dividerColor = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDividerColor, Color.WHITE)
 
-            dvuWheelProps.showDivider = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvShowDivider, true)
-            dvuWheelProps.itemTxtBold = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvItemTxtBold, false)
-            dvuWheelProps.itemTxtItalic = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvItemTxtItalic, false)
-            dvuWheelProps.infiniteScrolling = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvInfiniteScrolling, false)
-            dvuWheelProps.scaleDownEnabled = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvScaleDownEnabled, false)
+            properties.showDivider = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvShowDivider, true)
+            properties.itemTxtBold = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvItemTxtBold, false)
+            properties.itemTxtItalic = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvItemTxtItalic, false)
+            properties.infiniteScrolling = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvInfiniteScrolling, false)
+            properties.scaleDownEnabled = typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvScaleDownEnabled, false)
 
-            dvuWheelProps.orientation = if(typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvOrientationVertical, false)) {
+            properties.orientation = if(typedArray.getBoolean(R.styleable.DvuWheelView_dvuWvOrientationVertical, false)) {
                 VERTICAL
             } else {
                 HORIZONTAL
             }
 
-            dvuWheelProps.itemTxtSize = typedArray.getFloat(R.styleable.DvuWheelView_dvuWvItemTxtSize, dvuWheelProps.itemTxtSize)
-            dvuWheelProps.unselectedItemTxtAlpha = typedArray.getFloat(R.styleable.DvuWheelView_dvuWvUnselectedItemTxtAlpha, dvuWheelProps.unselectedItemTxtAlpha)
+            properties.itemTxtSize = typedArray.getDimension(R.styleable.DvuWheelView_dvuWvItemTxtSize, properties.itemTxtSize)
 
-            dvuWheelProps.selectedItemPos = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDefaultSelectedItemPos, 0)
+            properties.unselectedItemTxtAlpha = typedArray.getFloat(R.styleable.DvuWheelView_dvuWvUnselectedItemTxtAlpha, properties.unselectedItemTxtAlpha)
+
+            properties.selectedItemPos = typedArray.getInt(R.styleable.DvuWheelView_dvuWvDefaultSelectedItemPos, 0)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -139,16 +137,16 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
-        dvuWheelProps.height = h
-        if (dvuWheelProps.orientation == VERTICAL) {
-            dvuWheelProps.vPadding = (h/2) - dvuWheelProps.vPadding
-            dvu_wv.setPadding(0, dvuWheelProps.vPadding, 0, dvuWheelProps.vPadding)
+        properties.height = h
+        if (properties.orientation == VERTICAL) {
+            properties.vPadding = (h/2) - properties.vPadding
+            dvu_wv.setPadding(0, properties.vPadding, 0, properties.vPadding)
         } else {
-            dvuWheelProps.hPadding = (w/2) - dvuWheelProps.hPadding
-            dvu_wv.setPadding(dvuWheelProps.hPadding, 0, dvuWheelProps.hPadding, 0)
+            properties.hPadding = (w/2) - properties.hPadding
+            dvu_wv.setPadding(properties.hPadding, 0, properties.hPadding, 0)
         }
 
-        adapter?.update(dvuWheelProps)
+        adapter?.update(properties)
     }
 
     /**
@@ -156,27 +154,27 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      */
     private fun initWheelView() {
         // Setting the background color
-        dvu_wv.setBackgroundColor(dvuWheelProps.bgColor)
+        dvu_wv.setBackgroundColor(properties.bgColor)
 
         // Layout manager
-        dvu_wv.layoutManager = DvuWvSliderManager(context, dvuWheelProps.orientation, dvuWheelProps.scaleDownEnabled, object: OnDvuWvListener {
+        dvu_wv.layoutManager = DvuWvSliderManager(context, properties.orientation, properties.scaleDownEnabled, object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
-                dvuWheelProps.scrolling = false
+                properties.scrolling = false
 
-                if (position != dvuWheelProps.selectedItemPos) {
-                    dvuWheelProps.selectedItemPos = position
+                if (position != properties.selectedItemPos) {
+                    properties.selectedItemPos = position
 
                     // Sending an update when an item is selected
-                    listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
+                    listener?.onItemSelected(position, properties.itemsList[position])
                 }
 
-                adapter?.update(dvuWheelProps)
+                adapter?.update(properties)
             }
 
             override fun onScrolling() {
-                dvuWheelProps.scrolling = true
+                properties.scrolling = true
 
-                adapter?.update(dvuWheelProps)
+                adapter?.update(properties)
 
                 // Sending an update when the wheel is scrolling
                 listener?.onScrolling()
@@ -184,18 +182,18 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         })
 
         // Wheel Adapter
-        adapter = DvuWvAdapter(context, dvuWheelProps, object: OnDvuWvListener {
+        adapter = DvuWvAdapter(context, properties, object: OnDvuWvListener {
             override fun onItemSelected(position: Int, value: String) {
-                dvuWheelProps.scrolling = false
+                properties.scrolling = false
 
-                if (position != dvuWheelProps.selectedItemPos) {
-                    dvuWheelProps.selectedItemPos = position
+                if (position != properties.selectedItemPos) {
+                    properties.selectedItemPos = position
 
                     // Scrolling to the selected item position
                     dvu_wv.smoothScrollToPosition(position)
 
                     // Sending an update when an item is selected
-                    listener?.onItemSelected(position, dvuWheelProps.itemsList[position])
+                    listener?.onItemSelected(position, properties.itemsList[position])
                 }
             }
 
@@ -209,7 +207,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         dvu_wv.adapter = adapter
 
         // Refreshing the wheel
-        refreshWheel(dvuWheelProps.selectedItemPos)
+        refreshWheel(properties.selectedItemPos)
     }
 
     /**
@@ -217,39 +215,39 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param position Int The scroll position
      */
     private fun refreshWheel(position: Int) {
-        val prevPosition = dvuWheelProps.selectedItemPos
-        if (dvuWheelProps.itemsList.size > 0) {
-            if (position < 0 || position >= dvuWheelProps.itemsList.size) {
-                dvuWheelProps.selectedItemPos = 0
+        val prevPosition = properties.selectedItemPos
+        if (properties.itemsList.size > 0) {
+            if (position < 0 || position >= properties.itemsList.size) {
+                properties.selectedItemPos = 0
             } else {
-                dvuWheelProps.selectedItemPos = position
+                properties.selectedItemPos = position
             }
 
             // Finding initial scroll to position to prevent long animation when there are
             // lot of items in the list during smooth scroll
             val scrollToPosition = when {
-                dvuWheelProps.selectedItemPos > prevPosition -> {
+                properties.selectedItemPos > prevPosition -> {
                     // Scroll down position
-                    dvuWheelProps.selectedItemPos - 1
+                    properties.selectedItemPos - 1
                 }
-                dvuWheelProps.selectedItemPos < prevPosition -> {
+                properties.selectedItemPos < prevPosition -> {
                     // Scroll up position
-                    dvuWheelProps.selectedItemPos + 1
+                    properties.selectedItemPos + 1
                 }
                 else -> {
-                    dvuWheelProps.selectedItemPos
+                    properties.selectedItemPos
                 }
             }
 
-            if (scrollToPosition >= 0 &&  scrollToPosition < dvuWheelProps.itemsList.size) {
+            if (scrollToPosition >= 0 &&  scrollToPosition < properties.itemsList.size) {
                 dvu_wv.scrollToPosition(scrollToPosition)
             }
 
-            dvu_wv.smoothScrollToPosition(dvuWheelProps.selectedItemPos)
+            dvu_wv.smoothScrollToPosition(properties.selectedItemPos)
 
-            dvuWheelProps.enableItemHighlight = true
+            properties.enableItemHighlight = true
 
-            adapter?.update(dvuWheelProps)
+            adapter?.update(properties)
         }
     }
 
@@ -266,7 +264,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param itemsList ArrayList<String> The items list
      */
     fun setWheelItems(itemsList: ArrayList<String>) {
-        dvuWheelProps.itemsList = itemsList
+        properties.itemsList = itemsList
         refreshWheel(0)
     }
 
@@ -276,7 +274,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param scrollToPos Int The scroll to position
      */
     fun setWheelItems(itemsList: ArrayList<String>, scrollToPos: Int) {
-        dvuWheelProps.itemsList = itemsList
+        properties.itemsList = itemsList
         refreshWheel(scrollToPos)
     }
 
@@ -293,7 +291,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @param itemName String The scroll to item name
      */
     fun scrollToItem(itemName: String) {
-        refreshWheel(dvuWheelProps.itemsList.indexOf(itemName))
+        refreshWheel(properties.itemsList.indexOf(itemName))
     }
 
     /**
@@ -301,8 +299,8 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @return String? The current selected wheel item
      */
     fun getCurrentSelectedWheelItem(): String? {
-        return if (dvuWheelProps.selectedItemPos >= 0 && dvuWheelProps.selectedItemPos < dvuWheelProps.itemsList.size) {
-            dvuWheelProps.itemsList[dvuWheelProps.selectedItemPos]
+        return if (properties.selectedItemPos >= 0 && properties.selectedItemPos < properties.itemsList.size) {
+            properties.itemsList[properties.selectedItemPos]
         } else {
             null
         }
@@ -313,6 +311,6 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
      * @return Int The current selected wheel item position
      */
     fun getCurrentSelectedWheelItemPosition(): Int {
-        return dvuWheelProps.selectedItemPos
+        return properties.selectedItemPos
     }
 }

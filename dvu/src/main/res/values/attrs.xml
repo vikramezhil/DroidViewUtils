@@ -20,9 +20,9 @@
         <attr name="dvuSvHeight" format="dimension"/>
         <attr name="dvuSvSuggestionItemHeight" format="dimension"/>
         <attr name="dvuSvMargin" format="dimension"/>
+        <attr name="dvuSvCornerRadius" format="dimension"/>
+        <attr name="dvuSvElevation" format="dimension"/>
 
-        <attr name="dvuSvCornerRadius" format="float"/>
-        <attr name="dvuSvElevation" format="float"/>
         <attr name="dvuSvAlpha" format="float"/>
         <attr name="dvuSvOverlayAlpha" format="float"/>
         <attr name="dvuSvIconAlpha" format="float"/>
@@ -54,7 +54,8 @@
         <attr name="dvuWvInfiniteScrolling" format="boolean"/>
         <attr name="dvuWvScaleDownEnabled" format="boolean"/>
 
-        <attr name="dvuWvItemTxtSize" format="float"/>
+        <attr name="dvuWvItemTxtSize" format="dimension"/>
+
         <attr name="dvuWvUnselectedItemTxtAlpha" format="float"/>
 
         <attr name="dvuWvDefaultSelectedItemPos" format="integer"/>
