@@ -23,5 +23,9 @@ class DvuExampleActivity : AppCompatActivity() {
         btn_search_view.setOnClickListener {
             startActivity(Intent(this, SearchViewActivity::class.java))
         }
+
+        btn_flipper_view.setOnClickListener {
+            startActivity(Intent(this, FlipperViewActivity::class.java))
+        }
     }
 }

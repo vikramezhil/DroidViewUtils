@@ -20,6 +20,7 @@
 
         <activity android:name=".WheelPickerActivity" />
         <activity android:name=".SearchViewActivity" />
+        <activity android:name=".FlipperViewActivity" />
     </application>
 
 </manifest>
