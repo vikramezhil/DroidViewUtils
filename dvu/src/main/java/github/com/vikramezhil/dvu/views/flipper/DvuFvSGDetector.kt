@@ -12,7 +12,7 @@ import kotlin.math.abs
  * @author vikramezhil
  */
 
-class DvuFvSGDetector(private val context: Context, private val view: DvuFlipperView): GestureDetector.SimpleOnGestureListener()  {
+class DvuFvSGDetector(private val context: Context, private val view: DvuFlipperView, private val listener: OnDvuFvListener): GestureDetector.SimpleOnGestureListener()  {
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         try {
@@ -22,19 +22,24 @@ class DvuFvSGDetector(private val context: Context, private val view: DvuFlipper
                     view.inAnimation = AnimationUtils.loadAnimation(context, R.anim.left_in)
                     view.outAnimation = AnimationUtils.loadAnimation(context, R.anim.left_out)
                     view.showNext()
-                    return true
                 } else if (e2.x - e1.x > DvuFvProps.SWIPE_MIN_DISTANCE && abs(velocityX) > DvuFvProps.SWIPE_THRESHOLD_VELOCITY) {
                     // left to right swipe
                     view.inAnimation = AnimationUtils.loadAnimation(context, R.anim.right_in)
                     view.outAnimation = AnimationUtils.loadAnimation(context, R.anim.right_out)
                     view.showPrevious()
-                    return true
+                } else {
+                    return false
                 }
+            } else {
+                return false
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        return false
+        // Sending an update back on the current visible view
+        listener.onCurrentViewVisible(view.currentView, view.displayedChild)
+
+        return true
     }
 }
