@@ -62,6 +62,6 @@
     </declare-styleable>
 
     <declare-styleable name="DvuFlipperView">
-        <attr name="dvuFvInfiniteSwipe" format="boolean"/>
+
     </declare-styleable>
 </resources>
