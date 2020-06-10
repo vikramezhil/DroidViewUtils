@@ -6,5 +6,5 @@ package github.com.vikramezhil.dvu.views.flipper
  */
 
 abstract class DvuFvProps {
-    abstract var autoWrap: Boolean
+    abstract var currentViewPosition: Int
 }

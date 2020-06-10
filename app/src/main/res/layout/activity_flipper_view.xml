@@ -7,24 +7,24 @@
     <github.com.vikramezhil.dvu.views.flipper.DvuFlipperView
         android:id="@+id/flipper_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Flipper View 1"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Flipper View 2"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Flipper View 3"/>
     </github.com.vikramezhil.dvu.views.flipper.DvuFlipperView>

@@ -62,6 +62,6 @@
     </declare-styleable>
 
     <declare-styleable name="DvuFlipperView">
-        <attr name="dvuFvAutoWrap" format="boolean"/>
+
     </declare-styleable>
 </resources>
