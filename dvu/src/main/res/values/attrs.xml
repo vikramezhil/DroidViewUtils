@@ -62,6 +62,7 @@
     </declare-styleable>
 
     <declare-styleable name="DvuFlipperView">
+        <attr name="dvuFvIndicatorIcon" format="reference"/>
         <attr name="dvuFvActivePageIndicatorBgColor" format="color"/>
         <attr name="dvuFvInactivePageIndicatorBgColor" format="color"/>
     </declare-styleable>

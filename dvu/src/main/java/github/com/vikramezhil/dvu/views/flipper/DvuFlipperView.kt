@@ -14,8 +14,7 @@ import androidx.viewpager.widget.ViewPager
  * @author vikramezhil
  */
 
-class DvuFlipperView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): ViewPager(context) {
-
+open class DvuFlipperView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): ViewPager(context, attrs) {
     private var currentViewPosition: Int = 0
         set(value) {
             field = value

@@ -9,43 +9,51 @@
             type="github.com.vikramezhil.droidviewutils.viewmodel.FlipperViewModel" />
     </data>
 
-    <FrameLayout
+    <github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewWrapper
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
+        app:dvuFvInactivePageIndicatorBgColor="@android:color/black"
+        app:dvuFlipperView="@{dvuFlipperView}"
+        app:dvuFlipperViewIndicator="@{dvuFlipperViewIndicator}"
+        app:onDvuFvListener="@{flipperVm.flipperListener}">
 
         <github.com.vikramezhil.dvu.views.flipper.DvuFlipperView
             android:id="@+id/dvuFlipperView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
+            app:dvuFvInactivePageIndicatorBgColor="@color/colorPrimary">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@{flipperVm.currentFlipperItem}"
                 tools:text="@string/dvu_flipper_view"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@{flipperVm.currentFlipperItem}"/>
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
                 android:text="@{flipperVm.currentFlipperItem}"/>
         </github.com.vikramezhil.dvu.views.flipper.DvuFlipperView>
 
-        <github.com.vikramezhil.dvu.views.flipper.DvuFvPager
-            android:id="@+id/dvuFvPager"
+        <github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewIndicator
+            android:id="@+id/dvuFlipperViewIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
-            app:dvuFvInactivePageIndicatorBgColor="@color/colorPrimary"
-            app:onDvuFvListener="@{flipperVm.flipperListener}" />
-    </FrameLayout>
+            android:layout_gravity="bottom|center"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabPaddingStart="0dp"
+            app:tabPaddingEnd="0dp"/>
+    </github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewWrapper>
 </layout>

@@ -19,7 +19,7 @@ class FlipperViewModel(application: Application): AndroidViewModel(application) 
     val flipperListener: OnDvuFvListener = object: OnDvuFvListener {
         override fun onPageSelected(position: Int) {
             Log.d(FlipperViewModel::class.java.name, "onPageSelected position - $position")
-            currentFlipperItem.set("${application.resources.getString(R.string.dvu_flipper_view)} $position")
+            currentFlipperItem.set("${application.resources.getString(R.string.dvu_flipper_view)} ${position + 1}")
         }
     }
 }

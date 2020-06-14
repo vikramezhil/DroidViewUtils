@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import github.com.vikramezhil.droidviewutils.R
 import github.com.vikramezhil.droidviewutils.databinding.FragmentFlipperViewBinding
 import github.com.vikramezhil.droidviewutils.viewmodel.FlipperViewModel
-import kotlinx.android.synthetic.main.fragment_flipper_view.*
 
 /**
  * Droid View Utils - Flipper View Fragment
@@ -32,11 +31,5 @@ class FragmentFlipperView: Fragment() {
         binding.flipperVm = flipperVm
 
         return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        dvuFvPager.dvuFlipperView = dvuFlipperView
     }
 }

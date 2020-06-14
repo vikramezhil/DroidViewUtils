@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
         <variable
             name="onDvuFvListener"
@@ -9,13 +8,14 @@
         <variable
             name="dvuFlipperView"
             type="github.com.vikramezhil.dvu.views.flipper.DvuFlipperView"/>
+
+        <variable
+            name="dvuFlipperViewIndicator"
+            type="github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewIndicator"/>
     </data>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_dvu_fv"
+    <FrameLayout
+        android:id="@+id/dvu_fv_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:tabGravity="center"
-        app:tabIndicatorHeight="0dp" />
+        android:layout_height="match_parent"/>
 </layout>
