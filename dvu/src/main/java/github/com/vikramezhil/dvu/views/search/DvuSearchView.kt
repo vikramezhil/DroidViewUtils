@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.animation.Animation
@@ -17,6 +18,7 @@ import androidx.annotation.AttrRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import github.com.vikramezhil.dvu.R
+import github.com.vikramezhil.dvu.databinding.LayoutDvusvBinding
 import github.com.vikramezhil.dvu.utils.DvuScreenUtils
 import github.com.vikramezhil.dvu.utils.isAcceptingText
 import github.com.vikramezhil.dvu.views.edittext.OnDvuEtListener
@@ -29,8 +31,8 @@ import kotlinx.android.synthetic.main.layout_dvusv.view.*
 
 class DvuSearchView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
 
+    private var binding: LayoutDvusvBinding
     private var suggestionsAdapter: DvuSvAdapter? = null
-    private var listener: OnDvuSvListener? = null
     private var oldQuery: String? = null
     private var placeHolderIcon: Drawable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, context.theme)
@@ -38,6 +40,8 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         @Suppress("DEPRECATION")
         resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
     }
+
+    var onDvuSvListener: OnDvuSvListener? = null
 
     val properties = object: DvuSvProps() {
         override var hintText: String? = null
@@ -203,7 +207,9 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     init {
-        inflate(context, R.layout.layout_dvusv, this)
+        val layoutInflater = LayoutInflater.from(context)
+        layoutInflater.inflate(R.layout.layout_dvusv, this)
+        binding = LayoutDvusvBinding.inflate(layoutInflater)
 
         init(context, attrs)
     }
@@ -344,7 +350,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         suggestionsAdapter = DvuSvAdapter(context, properties, object: OnDvuSvItemListener {
             override fun onSuggestionItemClicked(clickedSuggestionItem: DvuSvItem) {
                 // Sending an update on the selected suggestion item
-                listener?.onSearchSuggestionItem(clickedSuggestionItem)
+                onDvuSvListener?.onSearchSuggestionItem(clickedSuggestionItem)
 
                 when {
                     properties.oneStepSuggestionClickVerify -> {
@@ -397,7 +403,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         et_dvu_sv_search.setOnKeyListener { _, keyCode, _ ->
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Sending an update on the searched text
-                listener?.onSearchText(et_dvu_sv_search.text.toString())
+                onDvuSvListener?.onSearchText(et_dvu_sv_search.text.toString())
 
                 if (properties.continuousSearch) {
                     // Clearing out the existing text
@@ -418,12 +424,12 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                 // Activating search view when focused
                 et_dvu_sv_search.performClick()
 
-                listener?.onHasFocus()
+                onDvuSvListener?.onHasFocus()
             } else {
                 // Closing the search view
                 closeSearchView()
 
-                listener?.onLostFocus()
+                onDvuSvListener?.onLostFocus()
             }
         }
 
@@ -467,7 +473,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                 val searchText = et_dvu_sv_search.text.toString()
                 if (oldQuery?.equals(searchText) == false) {
                     // Sending an update that the search text has changed
-                    listener?.onSearchTextChanged(oldQuery, searchText)
+                    onDvuSvListener?.onSearchTextChanged(oldQuery, searchText)
 
                     // Filtering the items
                     suggestionsAdapter?.filterItems(searchText, true)
@@ -528,11 +534,11 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
 
         iv_dvu_sv_microphone.setOnClickListener {
-            listener?.onMicClicked()
+            onDvuSvListener?.onMicClicked()
         }
 
         iv_dvu_sv_action.setOnClickListener {
-            listener?.onActionItemClicked()
+            onDvuSvListener?.onActionItemClicked()
         }
     }
 
@@ -611,13 +617,5 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
      */
     private fun setSuggestions(props: DvuSvProps = this.properties) {
         suggestionsAdapter?.updateItems(et_dvu_sv_search.text.toString(), props.suggestions)
-    }
-
-    /**
-     * Sets the search view listener
-     * @param listener OnDvuSvListener? The class instance which implements the listener
-     */
-    fun setOnDvuSvListener(listener: OnDvuSvListener?) {
-        this.listener = listener
     }
 }

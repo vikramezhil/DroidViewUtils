@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="searchVm"
+            type="github.com.vikramezhil.droidviewutils.viewmodel.SearchViewModel" />
+    </data>
 
     <github.com.vikramezhil.dvu.views.search.DvuSearchView
-        android:id="@+id/searchView"
+        android:id="@+id/dvuSearchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:dvuSvHeight="60dp"
@@ -24,5 +29,6 @@
         app:dvuSvOneStepSuggestionClickVerify="true"
         app:dvuSvCloseKeyboardOnSuggestionsScroll="true"
         app:dvuSvAlpha="0.8"
-        app:dvuSvOverlayAlpha="0.5"/>
-</FrameLayout>
+        app:dvuSvOverlayAlpha="0.5"
+        app:onDvuSvListener="@{searchVm.searchListener}"/>
+</layout>

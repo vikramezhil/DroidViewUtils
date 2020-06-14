@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="onDvuFvListener"
+            type="github.com.vikramezhil.dvu.views.flipper.OnDvuFvListener"/>
+
+        <variable
+            name="dvuFlipperView"
+            type="github.com.vikramezhil.dvu.views.flipper.DvuFlipperView"/>
+    </data>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_dvu_fv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp" />
+</layout>

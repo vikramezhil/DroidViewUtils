@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="flipperVm"
+            type="github.com.vikramezhil.droidviewutils.viewmodel.FlipperViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <github.com.vikramezhil.dvu.views.flipper.DvuFlipperView
+            android:id="@+id/dvuFlipperView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{flipperVm.currentFlipperItem}"
+                tools:text="@string/dvu_flipper_view"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{flipperVm.currentFlipperItem}"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{flipperVm.currentFlipperItem}"/>
+        </github.com.vikramezhil.dvu.views.flipper.DvuFlipperView>
+
+        <github.com.vikramezhil.dvu.views.flipper.DvuFvPager
+            android:id="@+id/dvuFvPager"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
+            app:dvuFvInactivePageIndicatorBgColor="@color/colorPrimary"
+            app:onDvuFvListener="@{flipperVm.flipperListener}" />
+    </FrameLayout>
+</layout>

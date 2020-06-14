@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/nav_item_dvu_sv"
+            android:title="@string/dvu_search_view" />
+
+        <item android:id="@+id/nav_item_dvu_wv"
+            android:title="@string/dvu_wheel_view" />
+
+        <item android:id="@+id/nav_item_dvu_fv"
+            android:title="@string/dvu_flipper_view" />
+    </group>
+
+</menu>

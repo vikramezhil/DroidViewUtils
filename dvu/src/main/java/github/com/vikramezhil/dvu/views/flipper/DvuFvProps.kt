@@ -6,5 +6,7 @@ package github.com.vikramezhil.dvu.views.flipper
  */
 
 abstract class DvuFvProps {
-    abstract var currentViewPosition: Int
+    abstract var activePageIndicatorBgColor: Int
+
+    abstract var inActivePageIndicatorBgColor: Int
 }

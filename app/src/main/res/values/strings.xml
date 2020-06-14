@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">DroidViewUtils</string>
 
+    <string name="dvu_search_view">Search View</string>
+    <string name="dvu_wheel_view">Wheel View</string>
+    <string name="dvu_flipper_view">Flipper View</string>
+
     <string-array name="dvu_wheel_view_example_items">
         <item>Item 1</item>
         <item>Item 2</item>
