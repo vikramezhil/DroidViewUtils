@@ -14,15 +14,13 @@
         android:layout_height="match_parent"
         app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
         app:dvuFvInactivePageIndicatorBgColor="@android:color/black"
-        app:dvuFlipperView="@{dvuFlipperView}"
-        app:dvuFlipperViewIndicator="@{dvuFlipperViewIndicator}"
         app:onDvuFvListener="@{flipperVm.flipperListener}">
 
         <github.com.vikramezhil.dvu.views.flipper.DvuFlipperView
-            android:id="@+id/dvuFlipperView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:layout_above="@+id/dvuFlipperViewIndicator"
             app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
             app:dvuFvInactivePageIndicatorBgColor="@color/colorPrimary">
 
@@ -47,10 +45,10 @@
         </github.com.vikramezhil.dvu.views.flipper.DvuFlipperView>
 
         <github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewIndicator
-            android:id="@+id/dvuFlipperViewIndicator"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             app:tabGravity="center"
             app:tabIndicatorHeight="0dp"
             app:tabPaddingStart="0dp"

@@ -6,8 +6,9 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.annotation.AttrRes
+import androidx.core.view.children
 import github.com.vikramezhil.dvu.R
 import github.com.vikramezhil.dvu.databinding.LayoutDvufvBinding
 
@@ -16,9 +17,13 @@ import github.com.vikramezhil.dvu.databinding.LayoutDvufvBinding
  * @author vikramezhil
  */
 
-class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
+class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): RelativeLayout(context, attrs, defStyleAttr) {
 
     private var binding: LayoutDvufvBinding? = null
+
+    private var dvuFlipperView: DvuFlipperView? = null
+
+    private var dvuFlipperViewIndicator: DvuFlipperViewIndicator? = null
 
     private val properties = object: DvuFvProps() {
         override var indicatorIcon: Drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -32,18 +37,6 @@ class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: A
         override var inActivePageIndicatorBgColor: Int = Color.GRAY
     }
 
-    var dvuFlipperView: DvuFlipperView? = null
-        set(value) {
-            field = value
-            setupWrapper()
-        }
-
-    var dvuFlipperViewIndicator: DvuFlipperViewIndicator? = null
-        set(value) {
-            field = value
-            setupWrapper()
-        }
-
     var onDvuFvListener: OnDvuFvListener? = null
         set(value) {
             field = value
@@ -56,6 +49,21 @@ class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: A
         binding = LayoutDvufvBinding.inflate(layoutInflater)
 
         init(context, attrs)
+    }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+
+        children.forEach {
+            if (it is DvuFlipperView) {
+                dvuFlipperView = it
+            } else if (it is DvuFlipperViewIndicator) {
+                dvuFlipperViewIndicator = it
+            }
+        }
+
+        // Setting up the page indicator
+        dvuFlipperViewIndicator?.setupIndicator(dvuFlipperView, properties.activePageIndicatorBgColor, properties.inActivePageIndicatorBgColor)
     }
 
     /**
@@ -79,12 +87,5 @@ class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: A
         } finally {
             typedArray.recycle()
         }
-    }
-
-    /**
-     * Sets up the wrapper
-     */
-    private fun setupWrapper() {
-        dvuFlipperViewIndicator?.setupIndicator(dvuFlipperView, properties.activePageIndicatorBgColor, properties.inActivePageIndicatorBgColor)
     }
 }

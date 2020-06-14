@@ -4,14 +4,6 @@
         <variable
             name="onDvuFvListener"
             type="github.com.vikramezhil.dvu.views.flipper.OnDvuFvListener"/>
-
-        <variable
-            name="dvuFlipperView"
-            type="github.com.vikramezhil.dvu.views.flipper.DvuFlipperView"/>
-
-        <variable
-            name="dvuFlipperViewIndicator"
-            type="github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewIndicator"/>
     </data>
 
     <FrameLayout
