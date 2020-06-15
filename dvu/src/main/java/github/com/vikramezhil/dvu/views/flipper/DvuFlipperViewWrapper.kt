@@ -25,14 +25,15 @@ class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: A
 
     private var dvuFlipperViewIndicator: DvuFlipperViewIndicator? = null
 
-    private val properties = object: DvuFvProps() {
-        override var indicatorIcon: Drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            resources.getDrawable(R.drawable.ic_dvu_page_indicator, context.theme)
-        } else {
-            @Suppress("DEPRECATION")
-            resources.getDrawable(R.drawable.ic_dvu_page_indicator)
-        }
+    private var placeHolderIcon: Drawable = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, context.theme)
+    } else {
+        @Suppress("DEPRECATION")
+        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
+    }
 
+    private val properties = object: DvuFvProps() {
+        override var indicatorIcon: Drawable = placeHolderIcon
         override var activePageIndicatorBgColor: Int = Color.BLACK
         override var inActivePageIndicatorBgColor: Int = Color.GRAY
     }
@@ -51,6 +52,31 @@ class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: A
         init(context, attrs)
     }
 
+    /**
+     * Initializes the view attributes
+     * @param context Context The view context
+     * @param attrs AttributeSet The view attributes
+     */
+    private fun init(context: Context, attrs: AttributeSet?) {
+        if (attrs == null) return
+
+        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.DvuFlipperView, 0, 0)
+
+        try {
+            properties.activePageIndicatorBgColor = typedArray.getInt(R.styleable.DvuFlipperView_dvuFvActivePageIndicatorBgColor, properties.activePageIndicatorBgColor)
+            properties.inActivePageIndicatorBgColor = typedArray.getInt(R.styleable.DvuFlipperView_dvuFvInactivePageIndicatorBgColor, properties.inActivePageIndicatorBgColor)
+
+            val indicatorIcon = typedArray.getDrawable(R.styleable.DvuFlipperView_dvuFvIndicatorIcon)
+            if (indicatorIcon != null) {
+                properties.indicatorIcon = indicatorIcon
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            typedArray.recycle()
+        }
+    }
+
     override fun onFinishInflate() {
         super.onFinishInflate()
 
@@ -63,29 +89,6 @@ class DvuFlipperViewWrapper @JvmOverloads constructor(context: Context, attrs: A
         }
 
         // Setting up the page indicator
-        dvuFlipperViewIndicator?.setupIndicator(dvuFlipperView, properties.activePageIndicatorBgColor, properties.inActivePageIndicatorBgColor)
-    }
-
-    /**
-     * Initializes the view attributes
-     * @param context Context The view context
-     * @param attrs AttributeSet The view attributes
-     */
-    private fun init(context: Context, attrs: AttributeSet?) {
-        if (attrs == null) return
-
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.DvuFlipperView, 0, 0)
-
-        try {
-            val indicatorIcon = typedArray.getDrawable(R.styleable.DvuFlipperView_dvuFvIndicatorIcon)
-            if (indicatorIcon != null) { properties.indicatorIcon = indicatorIcon }
-
-            properties.activePageIndicatorBgColor = typedArray.getInt(R.styleable.DvuFlipperView_dvuFvActivePageIndicatorBgColor, properties.activePageIndicatorBgColor)
-            properties.inActivePageIndicatorBgColor = typedArray.getInt(R.styleable.DvuFlipperView_dvuFvInactivePageIndicatorBgColor, properties.inActivePageIndicatorBgColor)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            typedArray.recycle()
-        }
+        dvuFlipperViewIndicator?.setupIndicator(dvuFlipperView, properties.indicatorIcon, properties.activePageIndicatorBgColor, properties.inActivePageIndicatorBgColor)
     }
 }
