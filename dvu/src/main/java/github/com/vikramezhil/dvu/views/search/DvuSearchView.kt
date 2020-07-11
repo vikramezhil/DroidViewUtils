@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import github.com.vikramezhil.dvu.R
 import github.com.vikramezhil.dvu.databinding.LayoutDvusvBinding
 import github.com.vikramezhil.dvu.utils.DvuScreenUtils
+import github.com.vikramezhil.dvu.utils.getPlaceHolderIcon
 import github.com.vikramezhil.dvu.utils.isAcceptingText
 import github.com.vikramezhil.dvu.views.edittext.OnDvuEtListener
 import kotlinx.android.synthetic.main.layout_dvusv.view.*
@@ -34,12 +35,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
     private var binding: LayoutDvusvBinding
     private var suggestionsAdapter: DvuSvAdapter? = null
     private var oldQuery: String? = null
-    private var placeHolderIcon: Drawable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, context.theme)
-    } else {
-        @Suppress("DEPRECATION")
-        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
-    }
+    private var placeHolderIcon: Drawable? = context.getPlaceHolderIcon()
 
     var onDvuSvListener: OnDvuSvListener? = null
 
@@ -220,63 +216,63 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
      * @param attrs AttributeSet The view attributes
      */
     private fun init(context: Context, attrs: AttributeSet?) {
-        if (attrs == null) return
+        attrs?.let {
+            val typedArray = context.theme.obtainStyledAttributes(it, R.styleable.DvuSearchView, 0, 0)
 
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.DvuSearchView, 0, 0)
+            try {
+                properties.hintText = typedArray.getString(R.styleable.DvuSearchView_dvuSvHintTxt)
 
-        try {
-            properties.hintText = typedArray.getString(R.styleable.DvuSearchView_dvuSvHintTxt)
+                properties.textStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvTxtStyle, properties.textStyle)
+                properties.suggestionTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionTitleTxtStyle, properties.suggestionTitleTextStyle)
+                properties.suggestionSubTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionSubTitleTxtStyle, properties.suggestionSubTitleTextStyle)
+                properties.bgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvBgColor, properties.bgColor)
+                properties.overlayBgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvOverlayBgColor, properties.overlayBgColor)
+                properties.textColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvTxtColor, properties.textColor)
+                properties.hintTextColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvHintTxtColor, properties.hintTextColor)
+                properties.dividerColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvDividerColor, properties.dividerColor)
 
-            properties.textStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvTxtStyle, properties.textStyle)
-            properties.suggestionTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionTitleTxtStyle, properties.suggestionTitleTextStyle)
-            properties.suggestionSubTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionSubTitleTxtStyle, properties.suggestionSubTitleTextStyle)
-            properties.bgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvBgColor, properties.bgColor)
-            properties.overlayBgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvOverlayBgColor, properties.overlayBgColor)
-            properties.textColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvTxtColor, properties.textColor)
-            properties.hintTextColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvHintTxtColor, properties.hintTextColor)
-            properties.dividerColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvDividerColor, properties.dividerColor)
+                val closeIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvCloseIcon)
+                if (closeIcon != null) {
+                    properties.closeIcon = closeIcon
+                }
 
-            val closeIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvCloseIcon)
-            if (closeIcon != null) {
-                properties.closeIcon = closeIcon
+                val clearIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvClearIcon)
+                if (clearIcon != null) {
+                    properties.clearIcon = clearIcon
+                }
+
+                val micIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvMicIcon)
+                if (micIcon != null) {
+                    properties.micIcon = micIcon
+                }
+
+                val actionIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvActionIcon)
+                if (actionIcon != null) {
+                    properties.actionIcon = actionIcon
+                }
+
+                properties.searchViewHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvHeight, properties.searchViewHeight)
+                properties.suggestionItemHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvSuggestionItemHeight, properties.suggestionItemHeight)
+                properties.margin = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvMargin, properties.margin)
+
+                properties.cornerRadius = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvCornerRadius, properties.cornerRadius)
+                properties.elevation = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvElevation, properties.elevation)
+                properties.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, properties.searchViewAlpha)
+                properties.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, properties.overlayAlpha)
+                properties.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, properties.searchViewIconAlpha)
+                properties.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, properties.suggestionItemIconAlpha)
+
+                properties.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, properties.oneStepSuggestionClickVerify)
+                properties.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, properties.continuousSearch)
+                properties.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, properties.closeOnOverlayTouch)
+                properties.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, properties.showMicIcon)
+                properties.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, properties.showActionIcon)
+                properties.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, properties.closeKeyboardOnSuggestionsScroll)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                typedArray.recycle()
             }
-
-            val clearIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvClearIcon)
-            if (clearIcon != null) {
-                properties.clearIcon = clearIcon
-            }
-
-            val micIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvMicIcon)
-            if (micIcon != null) {
-                properties.micIcon = micIcon
-            }
-
-            val actionIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvActionIcon)
-            if (actionIcon != null) {
-                properties.actionIcon = actionIcon
-            }
-
-            properties.searchViewHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvHeight, properties.searchViewHeight)
-            properties.suggestionItemHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvSuggestionItemHeight, properties.suggestionItemHeight)
-            properties.margin = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvMargin, properties.margin)
-
-            properties.cornerRadius = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvCornerRadius, properties.cornerRadius)
-            properties.elevation = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvElevation, properties.elevation)
-            properties.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, properties.searchViewAlpha)
-            properties.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, properties.overlayAlpha)
-            properties.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, properties.searchViewIconAlpha)
-            properties.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, properties.suggestionItemIconAlpha)
-
-            properties.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, properties.oneStepSuggestionClickVerify)
-            properties.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, properties.continuousSearch)
-            properties.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, properties.closeOnOverlayTouch)
-            properties.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, properties.showMicIcon)
-            properties.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, properties.showActionIcon)
-            properties.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, properties.closeKeyboardOnSuggestionsScroll)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            typedArray.recycle()
         }
 
         // Updating the views

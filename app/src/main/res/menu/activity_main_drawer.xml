@@ -9,6 +9,9 @@
 
         <item android:id="@+id/nav_item_dvu_fv"
             android:title="@string/dvu_flipper_view" />
+
+        <item android:id="@+id/nav_item_dvu_sb_cv"
+            android:title="@string/dvu_seek_bar_circle_view" />
     </group>
 
 </menu>
