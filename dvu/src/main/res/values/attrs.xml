@@ -71,9 +71,9 @@
         <attr name="dvuSbCvProgressUnit" format="string"/>
         <attr name="dvuSbCvProgressSeparator" format="string"/>
 
-        <attr name="dvuSbCvProgress" format="integer"/>
-        <attr name="dvuSbCvMin" format="integer"/>
-        <attr name="dvuSbCvMax" format="integer"/>
+        <attr name="dvuSbCvProgress" format="float"/>
+        <attr name="dvuSbCvMin" format="float"/>
+        <attr name="dvuSbCvMax" format="float"/>
 
         <attr name="dvuSbCvArcThickness" format="float"/>
 

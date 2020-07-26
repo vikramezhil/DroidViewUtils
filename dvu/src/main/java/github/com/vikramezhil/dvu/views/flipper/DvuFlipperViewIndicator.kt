@@ -10,6 +10,11 @@ import android.util.AttributeSet
 import androidx.annotation.AttrRes
 import com.google.android.material.tabs.TabLayout
 
+/**
+ * Droid View Utils - Flipper View Indicator
+ * @author vikramezhil
+ */
+
 class DvuFlipperViewIndicator @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): TabLayout(context, attrs, defStyleAttr) {
 
     var onDvuFvListener: OnDvuFvListener? = null

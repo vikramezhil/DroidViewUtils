@@ -11,11 +11,11 @@ abstract class DvuSbCvProps {
 
     abstract var separator: String?
 
-    abstract var progress: Int
+    abstract var progress: Float
 
-    abstract var min: Int
+    abstract var min: Float
 
-    abstract var max: Int
+    abstract var max: Float
 
     abstract var progressColor: Int
 

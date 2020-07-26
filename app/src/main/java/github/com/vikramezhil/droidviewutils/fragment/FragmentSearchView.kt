@@ -24,7 +24,7 @@ class FragmentSearchView: Fragment() {
     }
 
     private lateinit var binding: FragmentSearchViewBinding
-    lateinit var searchVm: SearchViewModel
+    private lateinit var searchVm: SearchViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_search_view, container, false)

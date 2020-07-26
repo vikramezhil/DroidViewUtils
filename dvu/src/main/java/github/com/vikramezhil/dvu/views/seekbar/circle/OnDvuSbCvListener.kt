@@ -8,8 +8,8 @@ interface OnDvuSbCvListener {
 
     /**
      * Sends an update on the progress
-     * @param currentProgress Int The current progress
-     * @param remainingProgress Int The remaining progress
+     * @param currentProgress Float The current progress
+     * @param remainingProgress Float The remaining progress
      */
-    fun onProgress(currentProgress: Int, remainingProgress: Int)
+    fun onProgress(currentProgress: Float, remainingProgress: Float)
 }

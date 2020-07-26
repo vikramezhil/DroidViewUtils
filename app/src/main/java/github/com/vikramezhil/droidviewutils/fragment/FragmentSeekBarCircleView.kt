@@ -24,7 +24,7 @@ class FragmentSeekBarCircleView: Fragment() {
     }
 
     private lateinit var binding: FragmentSeekBarCircleViewBinding
-    lateinit var seekBarCircleVm: SeekBarCircleViewModel
+    private lateinit var seekBarCircleVm: SeekBarCircleViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_seek_bar_circle_view, container, false)
@@ -35,13 +35,13 @@ class FragmentSeekBarCircleView: Fragment() {
 
         seekBarCircleVm.incrementVal.observe(viewLifecycleOwner, Observer { increment ->
             if (increment) {
-                binding.dvuSbCircleView.properties.progress += 10
+                binding.dvuSbCircleView.properties.progress += 10f
             }
         })
 
         seekBarCircleVm.decrementVal.observe(viewLifecycleOwner, Observer { decrement ->
             if (decrement) {
-                binding.dvuSbCircleView.properties.progress -= 5
+                binding.dvuSbCircleView.properties.progress -= 2.5f
             }
         })
 

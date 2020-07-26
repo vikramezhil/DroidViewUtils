@@ -13,7 +13,7 @@ import github.com.vikramezhil.dvu.R
 import github.com.vikramezhil.dvu.databinding.LayoutDvufvBinding
 
 /**
- * Droid View Utils - Flipper View
+ * Droid View Utils - Flipper View Wrapper
  * @author vikramezhil
  */
 

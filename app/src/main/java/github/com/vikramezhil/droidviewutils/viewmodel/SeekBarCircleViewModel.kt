@@ -7,6 +7,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import github.com.vikramezhil.dvu.views.seekbar.circle.OnDvuSbCvListener
 
+/**
+ * Seek Bar Circle View Model
+ * @author vikramezhil
+ */
+
 class SeekBarCircleViewModel(application: Application): AndroidViewModel(application)  {
 
     var incrementVal: MutableLiveData<Boolean> = MutableLiveData()
@@ -17,7 +22,7 @@ class SeekBarCircleViewModel(application: Application): AndroidViewModel(applica
             Log.d(SeekBarCircleViewModel::class.java.name, "Seek bar circle view clicked")
         }
 
-        override fun onProgress(currentProgress: Int, remainingProgress: Int) {
+        override fun onProgress(currentProgress: Float, remainingProgress: Float) {
             Log.d(SeekBarCircleViewModel::class.java.name, "Seek bar circle view -> current progress = $currentProgress, remaining progress = $remainingProgress")
         }
     }

@@ -13,6 +13,7 @@ import github.com.vikramezhil.dvu.R
 import github.com.vikramezhil.dvu.utils.DvuScreenUtils
 import kotlin.math.abs
 import kotlin.math.min
+import kotlin.math.roundToInt
 
 /**
  * Droid View Utils - Seek Bar Circle View
@@ -22,8 +23,8 @@ import kotlin.math.min
 class DvuSeekBarCircleView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): AppCompatTextView(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val MIN = 0
-        private const val MAX = 100
+        private const val MIN = 0f
+        private const val MAX = 100f
         private const val CLICK_THRESHOLD = 200
         private const val THICKNESS = 35f
         private const val ADJUST_ALPHA = 0.3f
@@ -73,7 +74,7 @@ class DvuSeekBarCircleView @JvmOverloads constructor(context: Context, attrs: At
                 invalidate()
                 requestLayout()
             }
-        override var progress: Int = 0
+        override var progress: Float = 0f
             set(value) {
                 field = value
 
@@ -82,14 +83,14 @@ class DvuSeekBarCircleView @JvmOverloads constructor(context: Context, attrs: At
                 requestLayout()
 
                 // Sending an update back on the progress
-                onDvuSbCvListener?.onProgress(progress, if (progress in 0..max) { max - progress } else { 0 })
+                onDvuSbCvListener?.onProgress(progress, if (progress >= 0f && progress < max) { max - progress } else { 0f })
             }
-        override var min: Int = MIN
+        override var min: Float = MIN
             set(value) {
                 field = value
                 invalidate()
             }
-        override var max: Int = MAX
+        override var max: Float = MAX
             set(value) {
                 field = value
                 invalidate()
@@ -132,9 +133,9 @@ class DvuSeekBarCircleView @JvmOverloads constructor(context: Context, attrs: At
             val typedArray = context.theme.obtainStyledAttributes(it, R.styleable.DvuSeekBarCircleView, 0, 0)
 
             try {
-                properties.progress = typedArray.getInt(R.styleable.DvuSeekBarCircleView_dvuSbCvProgress, properties.progress)
-                properties.min = typedArray.getInt(R.styleable.DvuSeekBarCircleView_dvuSbCvMin, properties.min)
-                properties.max = typedArray.getInt(R.styleable.DvuSeekBarCircleView_dvuSbCvMax, properties.max)
+                properties.progress = typedArray.getFloat(R.styleable.DvuSeekBarCircleView_dvuSbCvProgress, properties.progress)
+                properties.min = typedArray.getFloat(R.styleable.DvuSeekBarCircleView_dvuSbCvMin, properties.min)
+                properties.max = typedArray.getFloat(R.styleable.DvuSeekBarCircleView_dvuSbCvMax, properties.max)
                 properties.progressColor = typedArray.getInt(R.styleable.DvuSeekBarCircleView_dvuSbCvProgressColor, properties.progressColor)
                 properties.exceededColor = typedArray.getInt(R.styleable.DvuSeekBarCircleView_dvuSbCvExceededColor, properties.exceededColor)
 
@@ -191,7 +192,7 @@ class DvuSeekBarCircleView @JvmOverloads constructor(context: Context, attrs: At
             it.drawArc(rectF, startAngle, angle, false, ovalForegroundPaint)
 
             // Fill Oval
-            // it.drawArc(rectF, 0f, 360f, false, backgroundPaint)
+            it.drawArc(rectF, 0f, 360f, false, backgroundPaint)
 
             // Refreshing the progress text
             refreshProgressText()
@@ -269,8 +270,20 @@ class DvuSeekBarCircleView @JvmOverloads constructor(context: Context, attrs: At
      * Refreshes the progress text
      */
     private fun refreshProgressText() {
-        text = properties.separator?.let { "${properties.progress} ${properties.units} \n\n $it \n\n ${properties.max} ${properties.units}" }
-                            ?: "${properties.progress} ${properties.units} \n\n ${properties.max} ${properties.units}"
+        val progress = if (properties.progress % 1.0 == 0.0) {
+            properties.progress.roundToInt().toString()
+        } else {
+            properties.progress.toString()
+        }
+
+        val max = if (properties.max % 1.0 == 0.0) {
+            properties.max.roundToInt().toString()
+        } else {
+            properties.max.toString()
+        }
+
+        text = properties.separator?.let { "$progress ${properties.units} \n\n $it \n\n $max ${properties.units}" }
+                ?: "$progress ${properties.units} \n\n $max ${properties.units}"
     }
 
     /**
