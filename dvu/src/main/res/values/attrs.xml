@@ -68,19 +68,18 @@
     </declare-styleable>
 
     <declare-styleable name="DvuSeekBarCircleView">
+        <attr name="dvuSbCvProgressUnit" format="string"/>
+        <attr name="dvuSbCvProgressSeparator" format="string"/>
+
         <attr name="dvuSbCvProgress" format="integer"/>
         <attr name="dvuSbCvMin" format="integer"/>
         <attr name="dvuSbCvMax" format="integer"/>
-        <attr name="dvuSbCvStep" format="integer"/>
 
-        <attr name="dvuSbCvThumbIcon" format="reference"/>
+        <attr name="dvuSbCvArcThickness" format="float"/>
 
         <attr name="dvuSbCvProgressColor" format="color"/>
-        <attr name="dvuSbCvProgressWidth" format="dimension"/>
+        <attr name="dvuSbCvExceededColor" format="color"/>
 
-        <attr name="dvuSbCvArcColor" format="color"/>
-        <attr name="dvuSbCvArcWidth" format="dimension"/>
-
-        <attr name="dvuSbCvTxtStyle" format="reference"/>
+        <attr name="dvuSbCvEnableClick" format="boolean"/>
     </declare-styleable>
 </resources>

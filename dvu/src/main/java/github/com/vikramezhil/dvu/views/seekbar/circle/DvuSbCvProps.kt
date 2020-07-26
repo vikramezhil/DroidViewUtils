@@ -1,7 +1,5 @@
 package github.com.vikramezhil.dvu.views.seekbar.circle
 
-import android.graphics.drawable.Drawable
-
 /**
  * Droid View Utils - Seek Bar Circle View Props
  * @author vikramezhil
@@ -9,23 +7,21 @@ import android.graphics.drawable.Drawable
 
 abstract class DvuSbCvProps {
 
+    abstract var units: String?
+
+    abstract var separator: String?
+
     abstract var progress: Int
 
     abstract var min: Int
 
     abstract var max: Int
 
-    abstract var step: Int
-
-    abstract var thumbIcon: Drawable
-
     abstract var progressColor: Int
 
-    abstract var progressWidth: Int
+    abstract var exceededColor: Int
 
-    abstract var arcColor: Int
+    abstract var thickness: Float
 
-    abstract var arcWidth: Int
-
-    abstract var textStyle: Int
+    abstract var enableClick: Boolean
 }

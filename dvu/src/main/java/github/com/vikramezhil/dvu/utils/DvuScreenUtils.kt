@@ -9,8 +9,10 @@ import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.View.MeasureSpec
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.core.graphics.ColorUtils
 import github.com.vikramezhil.dvu.R
 import kotlin.math.roundToInt
 
@@ -111,6 +113,33 @@ class DvuScreenUtils {
          */
         fun colorWithAlpha(color: Int, ratio: Float): Int {
             return Color.argb((Color.alpha(color) * ratio).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
+        }
+
+
+        /**
+         * Blends two colors with alpha value
+         * @param color1 Int The color value 1
+         * @param color2 Int The color value 1
+         * @param alpha Float The alpha value
+         * @return Int The blended color
+         */
+        fun blendColor(color1: Int, color2: Int, alpha: Float): Int {
+            return ColorUtils.blendARGB(color1, color2, alpha)
+        }
+
+        /**
+         * Adjusts the color based on alpha
+         * @param color Int The color to be adjusted
+         * @param alpha Float The alpha value
+         * @return Int The adjusted color based on alpha
+         */
+        fun adjustAlpha(color: Int, alpha: Float): Int {
+            val factor = (Color.alpha(color) * alpha).roundToInt()
+            val red = Color.red(color)
+            val green = Color.green(color)
+            val blue = Color.blue(color)
+
+            return Color.argb(factor, red, green, blue)
         }
     }
 }

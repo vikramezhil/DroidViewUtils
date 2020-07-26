@@ -2,22 +2,14 @@ package github.com.vikramezhil.dvu.views.seekbar.circle
 
 interface OnDvuSbCvListener {
     /**
-     * Sends an update when points are changed
-     * @param view DvuSeekBarCircleView The view instance
-     * @param points Int The current points
-     * @param fromUser Boolean The points changed by user status
+     * Sends an update when the view is clicked
      */
-    fun onPointsChanged(view: DvuSeekBarCircleView, points: Int, fromUser: Boolean)
+    fun onClicked()
 
     /**
-     * Sends an update when seek bar is touch started
-     * @param view DvuSeekBarCircleView The view instance
+     * Sends an update on the progress
+     * @param currentProgress Int The current progress
+     * @param remainingProgress Int The remaining progress
      */
-    fun onStartTrackingTouch(view: DvuSeekBarCircleView)
-
-    /**
-     * Sends an update when seek bar is touch stopped
-     * @param view DvuSeekBarCircleView The view instance
-     */
-    fun onStopTrackingTouch(view: DvuSeekBarCircleView)
+    fun onProgress(currentProgress: Int, remainingProgress: Int)
 }
