@@ -12,6 +12,8 @@
 
         <item android:id="@+id/nav_item_dvu_sb_cv"
             android:title="@string/dvu_seek_bar_circle_view" />
-    </group>
 
+        <item android:id="@+id/nav_item_dvu_iv"
+            android:title="@string/dvu_icons_view" />
+    </group>
 </menu>

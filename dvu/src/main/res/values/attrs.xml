@@ -82,4 +82,10 @@
 
         <attr name="dvuSbCvEnableClick" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="DvuIconsView">
+        <attr name="dvuIvBrandsIcon" format="boolean"/>
+        <attr name="dvuIvSolidIcon" format="boolean"/>
+        <attr name="dvuIvRegularIcon" format="boolean"/>
+    </declare-styleable>
 </resources>

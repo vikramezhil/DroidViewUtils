@@ -10,10 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import github.com.vikramezhil.droidviewutils.R
-import github.com.vikramezhil.droidviewutils.fragment.FragmentFlipperView
-import github.com.vikramezhil.droidviewutils.fragment.FragmentSearchView
-import github.com.vikramezhil.droidviewutils.fragment.FragmentSeekBarCircleView
-import github.com.vikramezhil.droidviewutils.fragment.FragmentWheelView
+import github.com.vikramezhil.droidviewutils.fragment.*
 import kotlinx.android.synthetic.main.app_bar_dvu.*
 
 /**
@@ -38,7 +35,8 @@ class DvuExampleActivity : AppCompatActivity() {
         fragments = arrayOf(DvuFragmentModel(R.id.nav_item_dvu_sv, FragmentSearchView.newInstance()),
                             DvuFragmentModel(R.id.nav_item_dvu_wv, FragmentWheelView.newInstance()),
                             DvuFragmentModel(R.id.nav_item_dvu_fv, FragmentFlipperView.newInstance()),
-                            DvuFragmentModel(R.id.nav_item_dvu_sb_cv, FragmentSeekBarCircleView.newInstance()))
+                            DvuFragmentModel(R.id.nav_item_dvu_sb_cv, FragmentSeekBarCircleView.newInstance()),
+                            DvuFragmentModel(R.id.nav_item_dvu_iv, FragmentIconsView.newInstance()))
 
         toolbar = findViewById(R.id.dvu_toolbar)
         setSupportActionBar(toolbar)

@@ -5,6 +5,7 @@
     <string name="dvu_wheel_view">Wheel View</string>
     <string name="dvu_flipper_view">Flipper View</string>
     <string name="dvu_seek_bar_circle_view">Seek Bar Circle View</string>
+    <string name="dvu_icons_view">Icons View</string>
 
     <string name="dvu_sb_circle_view_units">count</string>
     <string name="dvu_sb_circle_view_separator">of</string>
@@ -23,4 +24,9 @@
         <item>Item 9</item>
         <item>Item 10</item>
     </string-array>
+
+    <!-- https://fontawesome.com/icons?d=gallery&m=free -->
+    <string name="dvu_icon_view_brands_icon">&#xf270;</string>
+    <string name="dvu_icon_view_solid_icon">&#xf5d1;</string>
+    <string name="dvu_icon_view_regular_icon">&#xf581;</string>
 </resources>
