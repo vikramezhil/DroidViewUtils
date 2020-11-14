@@ -60,4 +60,32 @@
 
         <attr name="dvuWvDefaultSelectedItemPos" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="DvuFlipperView">
+        <attr name="dvuFvIndicatorIcon" format="reference"/>
+        <attr name="dvuFvActivePageIndicatorBgColor" format="color"/>
+        <attr name="dvuFvInactivePageIndicatorBgColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="DvuSeekBarCircleView">
+        <attr name="dvuSbCvProgressUnit" format="string"/>
+        <attr name="dvuSbCvProgressSeparator" format="string"/>
+
+        <attr name="dvuSbCvProgress" format="float"/>
+        <attr name="dvuSbCvMin" format="float"/>
+        <attr name="dvuSbCvMax" format="float"/>
+
+        <attr name="dvuSbCvArcThickness" format="float"/>
+
+        <attr name="dvuSbCvProgressColor" format="color"/>
+        <attr name="dvuSbCvExceededColor" format="color"/>
+
+        <attr name="dvuSbCvEnableClick" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="DvuIconsView">
+        <attr name="dvuIvBrandsIcon" format="boolean"/>
+        <attr name="dvuIvSolidIcon" format="boolean"/>
+        <attr name="dvuIvRegularIcon" format="boolean"/>
+    </declare-styleable>
 </resources>

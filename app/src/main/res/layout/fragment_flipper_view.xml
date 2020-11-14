@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="flipperVm"
+            type="github.com.vikramezhil.droidviewutils.viewmodel.FlipperViewModel" />
+    </data>
+
+    <github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewWrapper
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:dvuFvActivePageIndicatorBgColor="@color/colorAccent"
+        app:dvuFvInactivePageIndicatorBgColor="@android:color/black"
+        app:onDvuFvListener="@{flipperVm.flipperListener}">
+
+        <github.com.vikramezhil.dvu.views.flipper.DvuFlipperView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_above="@+id/dvuFlipperViewIndicator">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@{flipperVm.currentFlipperItem}"
+                tools:text="@string/dvu_flipper_view"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@{flipperVm.currentFlipperItem}"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@{flipperVm.currentFlipperItem}"/>
+        </github.com.vikramezhil.dvu.views.flipper.DvuFlipperView>
+
+        <github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewIndicator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabPaddingStart="0dp"
+            app:tabPaddingEnd="0dp"/>
+    </github.com.vikramezhil.dvu.views.flipper.DvuFlipperViewWrapper>
+</layout>

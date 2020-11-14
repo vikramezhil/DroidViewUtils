@@ -3,12 +3,13 @@ package github.com.vikramezhil.dvu.views.wheel
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
 import androidx.annotation.AttrRes
 import github.com.vikramezhil.dvu.R
+import github.com.vikramezhil.dvu.databinding.LayoutDvuwvBinding
 import kotlinx.android.synthetic.main.layout_dvuwv.view.*
 
 /**
@@ -18,6 +19,8 @@ import kotlinx.android.synthetic.main.layout_dvuwv.view.*
 
 class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
 
+    private var binding: LayoutDvuwvBinding
+    private var adapter: DvuWvAdapter? = null
     private var properties = object: DvuWvProps() {
         override var itemsList: ArrayList<String> = ArrayList()
 
@@ -66,11 +69,12 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
         override var orientation: Int = HORIZONTAL
     }
 
-    private var adapter: DvuWvAdapter? = null
-    private var listener: OnDvuWvListener? = null
+    var onDvuWvListener: OnDvuWvListener? = null
 
     init {
-        View.inflate(context, R.layout.layout_dvuwv, this)
+        val layoutInflater = LayoutInflater.from(context)
+        layoutInflater.inflate(R.layout.layout_dvuwv, this)
+        binding = LayoutDvuwvBinding.inflate(layoutInflater)
 
         minimumHeight = properties.height
 
@@ -165,7 +169,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
                     properties.selectedItemPos = position
 
                     // Sending an update when an item is selected
-                    listener?.onItemSelected(position, properties.itemsList[position])
+                    onDvuWvListener?.onItemSelected(position, properties.itemsList[position])
                 }
 
                 adapter?.update(properties)
@@ -177,7 +181,7 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
                 adapter?.update(properties)
 
                 // Sending an update when the wheel is scrolling
-                listener?.onScrolling()
+                onDvuWvListener?.onScrolling()
             }
         })
 
@@ -193,13 +197,13 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
                     dvu_wv.smoothScrollToPosition(position)
 
                     // Sending an update when an item is selected
-                    listener?.onItemSelected(position, properties.itemsList[position])
+                    onDvuWvListener?.onItemSelected(position, properties.itemsList[position])
                 }
             }
 
             override fun onScrolling() {
                 // Sending an update when the wheel is scrolling
-                listener?.onScrolling()
+                onDvuWvListener?.onScrolling()
             }
         })
 
@@ -249,14 +253,6 @@ class DvuWheelView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
             adapter?.update(properties)
         }
-    }
-
-    /**
-     * Sets the wheel listener
-     * @param listener OnDvuWvListener The class which initializes wheel view listener
-     */
-    fun setOnDvuWvWheelListener(listener: OnDvuWvListener) {
-        this.listener = listener
     }
 
     /**

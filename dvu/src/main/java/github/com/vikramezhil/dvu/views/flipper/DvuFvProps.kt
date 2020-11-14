@@ -1,6 +1,6 @@
 package github.com.vikramezhil.dvu.views.flipper
 
-import android.view.GestureDetector
+import android.graphics.drawable.Drawable
 
 /**
  * Droid View Utils - Flipper View Props
@@ -8,11 +8,9 @@ import android.view.GestureDetector
  */
 
 abstract class DvuFvProps {
+    abstract var indicatorIcon: Drawable
 
-    companion object {
-        const val SWIPE_MIN_DISTANCE = 120
-        const val SWIPE_THRESHOLD_VELOCITY = 200
-    }
+    abstract var activePageIndicatorBgColor: Int
 
-    abstract var swipeGestureDetector: GestureDetector?
+    abstract var inActivePageIndicatorBgColor: Int
 }

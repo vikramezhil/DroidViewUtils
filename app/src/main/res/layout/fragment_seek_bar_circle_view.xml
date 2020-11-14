@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+            name="seekBarCircleVm"
+            type="github.com.vikramezhil.droidviewutils.viewmodel.SeekBarCircleViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <github.com.vikramezhil.dvu.views.seekbar.circle.DvuSeekBarCircleView
+            android:id="@+id/dvuSbCircleView"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_gravity="center"
+            app:dvuSbCvProgressUnit="@string/dvu_sb_circle_view_units"
+            app:dvuSbCvProgressSeparator="@string/dvu_sb_circle_view_separator"
+            app:dvuSbCvMin="0"
+            app:dvuSbCvMax="100"
+            app:dvuSbCvProgress="10"
+            app:dvuSbCvProgressColor="@color/colorAccent"
+            app:dvuSbCvExceededColor="@android:color/holo_red_dark"
+            app:dvuSbCvEnableClick="true"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:ignore="ButtonStyle">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dvu_sb_circle_view_increment"
+                android:textColor="@android:color/white"
+                android:background="@color/colorPrimary"
+                android:layout_margin="5dp"
+                android:onClick="@{seekBarCircleVm.increment}"/>
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/dvu_sb_circle_view_decrement"
+                android:textColor="@android:color/white"
+                android:background="@color/colorPrimary"
+                android:layout_margin="5dp"
+                android:onClick="@{seekBarCircleVm.decrement}"/>
+        </LinearLayout>
+    </FrameLayout>
+</layout>

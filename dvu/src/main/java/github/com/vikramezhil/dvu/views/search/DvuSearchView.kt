@@ -8,6 +8,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.animation.Animation
@@ -17,7 +18,9 @@ import androidx.annotation.AttrRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import github.com.vikramezhil.dvu.R
+import github.com.vikramezhil.dvu.databinding.LayoutDvusvBinding
 import github.com.vikramezhil.dvu.utils.DvuScreenUtils
+import github.com.vikramezhil.dvu.utils.getPlaceHolderIcon
 import github.com.vikramezhil.dvu.utils.isAcceptingText
 import github.com.vikramezhil.dvu.views.edittext.OnDvuEtListener
 import kotlinx.android.synthetic.main.layout_dvusv.view.*
@@ -29,15 +32,12 @@ import kotlinx.android.synthetic.main.layout_dvusv.view.*
 
 class DvuSearchView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0): FrameLayout(context, attrs, defStyleAttr) {
 
+    private var binding: LayoutDvusvBinding
     private var suggestionsAdapter: DvuSvAdapter? = null
-    private var listener: OnDvuSvListener? = null
     private var oldQuery: String? = null
-    private var placeHolderIcon: Drawable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, context.theme)
-    } else {
-        @Suppress("DEPRECATION")
-        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
-    }
+    private var placeHolderIcon: Drawable? = context.getPlaceHolderIcon()
+
+    var onDvuSvListener: OnDvuSvListener? = null
 
     val properties = object: DvuSvProps() {
         override var hintText: String? = null
@@ -203,7 +203,9 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
     }
 
     init {
-        inflate(context, R.layout.layout_dvusv, this)
+        val layoutInflater = LayoutInflater.from(context)
+        layoutInflater.inflate(R.layout.layout_dvusv, this)
+        binding = LayoutDvusvBinding.inflate(layoutInflater)
 
         init(context, attrs)
     }
@@ -214,63 +216,63 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
      * @param attrs AttributeSet The view attributes
      */
     private fun init(context: Context, attrs: AttributeSet?) {
-        if (attrs == null) return
+        attrs?.let {
+            val typedArray = context.theme.obtainStyledAttributes(it, R.styleable.DvuSearchView, 0, 0)
 
-        val typedArray = context.theme.obtainStyledAttributes(attrs, R.styleable.DvuSearchView, 0, 0)
+            try {
+                properties.hintText = typedArray.getString(R.styleable.DvuSearchView_dvuSvHintTxt)
 
-        try {
-            properties.hintText = typedArray.getString(R.styleable.DvuSearchView_dvuSvHintTxt)
+                properties.textStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvTxtStyle, properties.textStyle)
+                properties.suggestionTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionTitleTxtStyle, properties.suggestionTitleTextStyle)
+                properties.suggestionSubTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionSubTitleTxtStyle, properties.suggestionSubTitleTextStyle)
+                properties.bgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvBgColor, properties.bgColor)
+                properties.overlayBgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvOverlayBgColor, properties.overlayBgColor)
+                properties.textColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvTxtColor, properties.textColor)
+                properties.hintTextColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvHintTxtColor, properties.hintTextColor)
+                properties.dividerColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvDividerColor, properties.dividerColor)
 
-            properties.textStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvTxtStyle, properties.textStyle)
-            properties.suggestionTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionTitleTxtStyle, properties.suggestionTitleTextStyle)
-            properties.suggestionSubTitleTextStyle = typedArray.getResourceId(R.styleable.DvuSearchView_dvuSvSuggestionSubTitleTxtStyle, properties.suggestionSubTitleTextStyle)
-            properties.bgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvBgColor, properties.bgColor)
-            properties.overlayBgColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvOverlayBgColor, properties.overlayBgColor)
-            properties.textColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvTxtColor, properties.textColor)
-            properties.hintTextColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvHintTxtColor, properties.hintTextColor)
-            properties.dividerColor = typedArray.getInt(R.styleable.DvuSearchView_dvuSvDividerColor, properties.dividerColor)
+                val closeIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvCloseIcon)
+                if (closeIcon != null) {
+                    properties.closeIcon = closeIcon
+                }
 
-            val closeIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvCloseIcon)
-            if (closeIcon != null) {
-                properties.closeIcon = closeIcon
+                val clearIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvClearIcon)
+                if (clearIcon != null) {
+                    properties.clearIcon = clearIcon
+                }
+
+                val micIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvMicIcon)
+                if (micIcon != null) {
+                    properties.micIcon = micIcon
+                }
+
+                val actionIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvActionIcon)
+                if (actionIcon != null) {
+                    properties.actionIcon = actionIcon
+                }
+
+                properties.searchViewHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvHeight, properties.searchViewHeight)
+                properties.suggestionItemHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvSuggestionItemHeight, properties.suggestionItemHeight)
+                properties.margin = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvMargin, properties.margin)
+
+                properties.cornerRadius = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvCornerRadius, properties.cornerRadius)
+                properties.elevation = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvElevation, properties.elevation)
+                properties.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, properties.searchViewAlpha)
+                properties.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, properties.overlayAlpha)
+                properties.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, properties.searchViewIconAlpha)
+                properties.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, properties.suggestionItemIconAlpha)
+
+                properties.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, properties.oneStepSuggestionClickVerify)
+                properties.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, properties.continuousSearch)
+                properties.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, properties.closeOnOverlayTouch)
+                properties.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, properties.showMicIcon)
+                properties.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, properties.showActionIcon)
+                properties.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, properties.closeKeyboardOnSuggestionsScroll)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                typedArray.recycle()
             }
-
-            val clearIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvClearIcon)
-            if (clearIcon != null) {
-                properties.clearIcon = clearIcon
-            }
-
-            val micIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvMicIcon)
-            if (micIcon != null) {
-                properties.micIcon = micIcon
-            }
-
-            val actionIcon = typedArray.getDrawable(R.styleable.DvuSearchView_dvuSvActionIcon)
-            if (actionIcon != null) {
-                properties.actionIcon = actionIcon
-            }
-
-            properties.searchViewHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvHeight, properties.searchViewHeight)
-            properties.suggestionItemHeight = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvSuggestionItemHeight, properties.suggestionItemHeight)
-            properties.margin = typedArray.getDimensionPixelSize(R.styleable.DvuSearchView_dvuSvMargin, properties.margin)
-
-            properties.cornerRadius = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvCornerRadius, properties.cornerRadius)
-            properties.elevation = typedArray.getDimension(R.styleable.DvuSearchView_dvuSvElevation, properties.elevation)
-            properties.searchViewAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvAlpha, properties.searchViewAlpha)
-            properties.overlayAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvOverlayAlpha, properties.overlayAlpha)
-            properties.searchViewIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvIconAlpha, properties.searchViewIconAlpha)
-            properties.suggestionItemIconAlpha = typedArray.getFloat(R.styleable.DvuSearchView_dvuSvSuggestionItemIconAlpha, properties.suggestionItemIconAlpha)
-
-            properties.oneStepSuggestionClickVerify = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvOneStepSuggestionClickVerify, properties.oneStepSuggestionClickVerify)
-            properties.continuousSearch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvContinuousSearch, properties.continuousSearch)
-            properties.closeOnOverlayTouch = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseOnOverlayTouch, properties.closeOnOverlayTouch)
-            properties.showMicIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowMicIcon, properties.showMicIcon)
-            properties.showActionIcon = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvShowActionIcon, properties.showActionIcon)
-            properties.closeKeyboardOnSuggestionsScroll = typedArray.getBoolean(R.styleable.DvuSearchView_dvuSvCloseKeyboardOnSuggestionsScroll, properties.closeKeyboardOnSuggestionsScroll)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            typedArray.recycle()
         }
 
         // Updating the views
@@ -344,7 +346,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         suggestionsAdapter = DvuSvAdapter(context, properties, object: OnDvuSvItemListener {
             override fun onSuggestionItemClicked(clickedSuggestionItem: DvuSvItem) {
                 // Sending an update on the selected suggestion item
-                listener?.onSearchSuggestionItem(clickedSuggestionItem)
+                onDvuSvListener?.onSearchSuggestionItem(clickedSuggestionItem)
 
                 when {
                     properties.oneStepSuggestionClickVerify -> {
@@ -397,7 +399,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         et_dvu_sv_search.setOnKeyListener { _, keyCode, _ ->
             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                 // Sending an update on the searched text
-                listener?.onSearchText(et_dvu_sv_search.text.toString())
+                onDvuSvListener?.onSearchText(et_dvu_sv_search.text.toString())
 
                 if (properties.continuousSearch) {
                     // Clearing out the existing text
@@ -418,12 +420,12 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                 // Activating search view when focused
                 et_dvu_sv_search.performClick()
 
-                listener?.onHasFocus()
+                onDvuSvListener?.onHasFocus()
             } else {
                 // Closing the search view
                 closeSearchView()
 
-                listener?.onLostFocus()
+                onDvuSvListener?.onLostFocus()
             }
         }
 
@@ -467,7 +469,7 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
                 val searchText = et_dvu_sv_search.text.toString()
                 if (oldQuery?.equals(searchText) == false) {
                     // Sending an update that the search text has changed
-                    listener?.onSearchTextChanged(oldQuery, searchText)
+                    onDvuSvListener?.onSearchTextChanged(oldQuery, searchText)
 
                     // Filtering the items
                     suggestionsAdapter?.filterItems(searchText, true)
@@ -528,11 +530,11 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
         }
 
         iv_dvu_sv_microphone.setOnClickListener {
-            listener?.onMicClicked()
+            onDvuSvListener?.onMicClicked()
         }
 
         iv_dvu_sv_action.setOnClickListener {
-            listener?.onActionItemClicked()
+            onDvuSvListener?.onActionItemClicked()
         }
     }
 
@@ -611,13 +613,5 @@ class DvuSearchView @JvmOverloads constructor(context: Context, attrs: Attribute
      */
     private fun setSuggestions(props: DvuSvProps = this.properties) {
         suggestionsAdapter?.updateItems(et_dvu_sv_search.text.toString(), props.suggestions)
-    }
-
-    /**
-     * Sets the search view listener
-     * @param listener OnDvuSvListener? The class instance which implements the listener
-     */
-    fun setOnDvuSvListener(listener: OnDvuSvListener?) {
-        this.listener = listener
     }
 }

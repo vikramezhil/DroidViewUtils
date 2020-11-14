@@ -4,14 +4,17 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.view.View.MeasureSpec
+import android.view.ViewTreeObserver
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.core.graphics.ColorUtils
+import github.com.vikramezhil.dvu.R
 import kotlin.math.roundToInt
-
 
 /**
  * Screen Utils
@@ -20,30 +23,6 @@ import kotlin.math.roundToInt
 
 class DvuScreenUtils {
     companion object {
-        /**
-         * Gets the screen width
-         * @param context Context The application context
-         * @return Int The screen width
-         */
-        fun getScreenWidth(context: Context): Int {
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val dm = DisplayMetrics()
-            windowManager.defaultDisplay.getMetrics(dm)
-            return dm.widthPixels
-        }
-
-        /**
-         * Gets the screen height
-         * @param context Context The application context
-         * @return Int The screen height
-         */
-        fun getScreenHeight(context: Context): Int {
-            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val dm = DisplayMetrics()
-            windowManager.defaultDisplay.getMetrics(dm)
-            return dm.heightPixels
-        }
-
         /**
          * Returns the view default size. Uses the supplied size if the MeasureSpec imposed no constraints.
          * Will get larger if allowed by the MeasureSpec.
@@ -135,7 +114,58 @@ class DvuScreenUtils {
         fun colorWithAlpha(color: Int, ratio: Float): Int {
             return Color.argb((Color.alpha(color) * ratio).roundToInt(), Color.red(color), Color.green(color), Color.blue(color))
         }
+
+
+        /**
+         * Blends two colors with alpha value
+         * @param color1 Int The color value 1
+         * @param color2 Int The color value 1
+         * @param alpha Float The alpha value
+         * @return Int The blended color
+         */
+        fun blendColor(color1: Int, color2: Int, alpha: Float): Int {
+            return ColorUtils.blendARGB(color1, color2, alpha)
+        }
+
+        /**
+         * Adjusts the color based on alpha
+         * @param color Int The color to be adjusted
+         * @param alpha Float The alpha value
+         * @return Int The adjusted color based on alpha
+         */
+        fun adjustAlpha(color: Int, alpha: Float): Int {
+            val factor = (Color.alpha(color) * alpha).roundToInt()
+            val red = Color.red(color)
+            val green = Color.green(color)
+            val blue = Color.blue(color)
+
+            return Color.argb(factor, red, green, blue)
+        }
     }
+}
+
+/**
+ * Gets the screen width
+ * @receiver context Context The application context
+ * @return Int The screen width
+ */
+fun Context.getScreenWidth(): Int {
+    val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val dm = DisplayMetrics()
+    windowManager.defaultDisplay.getMetrics(dm)
+    return dm.widthPixels
+}
+
+/**
+ * Gets the screen height
+ * @receiver context Context The application context
+ * @return Int The screen height
+ */
+fun Context.getScreenHeight(): Int {
+    val windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val dm = DisplayMetrics()
+    windowManager.defaultDisplay.getMetrics(dm)
+    return dm.heightPixels
 }
 
 /**
@@ -146,4 +176,18 @@ class DvuScreenUtils {
 fun Context.isAcceptingText(): Boolean {
     val inputMethodManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     return inputMethodManager.isAcceptingText
+}
+
+/**
+ * Gets the place holder icon
+ * @receiver context Context The application context
+ * @return Drawable The place holder icon drawable
+ */
+fun Context.getPlaceHolderIcon(): Drawable {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder, theme)
+    } else {
+        @Suppress("DEPRECATION")
+        resources.getDrawable(R.drawable.ic_dvu_icon_placeholder)
+    }
 }
